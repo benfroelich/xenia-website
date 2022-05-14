@@ -1,6 +1,24 @@
 {% if post %}
-  <h1>{% post.title %}</h1>
-  <p>{% post.text %}</p>
+<h1>{{ post.title }}</h1>
+<p>published {{ post.pub_date }}</p>
+{% if post.pub_date != post.edit_date %}
+<p>updated {{ post.edit_date }}</p>
+{% endif %}
+<p>{{ post.text }}</p>
 {% else %}
   <p>No post dag yo</p>
 {% endif %}
+<form action="{% url 'blog:comment' post.id %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h2>Comment on "{{ post.title }}"</h2></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+		<textarea id="comment" name="comment" required minlength="4" maxlength=1000 rows=8></textarea>
+</fieldset>
+<input type="submit" value="Post">
+</form>
+{% for comment in comments %}
+    <p>
+		{{ comment.comment_text }}
+		</p>
+{% endfor %}

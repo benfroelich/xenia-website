@@ -8,8 +8,8 @@ from django.utils import timezone
 # blog posts, comments, reviews
 class PublishMeta(models.Model):
     pub_date = models.DateTimeField('date published', default=timezone.now)
-    edit_date = models.DateTimeField('date last modified', default=timezone.now)
-    author = models.CharField(max_length=100)
+    edit_date = models.DateTimeField('date last modified', auto_now=True)
+    author = models.CharField(max_length=200)
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
     # this class is only used as a add-on to others, never on it's own
@@ -34,6 +34,7 @@ class Post(PublishMeta):
 
 class Comment(PublishMeta):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    regarding = models.ForeignKey(Comment, on_delete=models.CASCADE)
     comment_text = models.CharField(max_length=10000)
     def __str__(self):
         return f'"{self.comment_text}" - {super().__str__()} on post {self.post}'
