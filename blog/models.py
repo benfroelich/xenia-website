@@ -32,9 +32,14 @@ class Post(PublishMeta):
     def __str__(self):
         return f'"{self.text}" - {super().__str__()}'
 
-class Comment(PublishMeta):
+# a group of comments will be listed in a thread
+class Thread(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    regarding = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'Comment Thread on {super().__str__()}'
+
+class Comment(PublishMeta):
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     comment_text = models.CharField(max_length=10000)
     def __str__(self):
         return f'"{self.comment_text}" - {super().__str__()} on post {self.post}'
