@@ -3,6 +3,13 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+# TODO
+#class Author(models.Model):
+#    name = models.CharField(max_length=200)
+#    email = models.EmailField()
+#
+#    def __str__(self):
+#        return self.name
 
 # information that comes with any published content, e.g.
 # blog posts, comments, reviews
@@ -30,17 +37,17 @@ class Post(PublishMeta):
     title = models.CharField(max_length=1000)
     text = models.TextField(max_length=10000)
     def __str__(self):
-        return f'"{self.text}" - {super().__str__()}'
+        return f'"{self.pk} - {self.title}"'
 
 # a group of comments will be listed in a thread
 class Thread(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     def __str__(self):
-        return f'Comment Thread on {super().__str__()}'
+        return f'Comment Thread on {self.post.__str__()}'
 
 class Comment(PublishMeta):
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
     comment_text = models.CharField(max_length=10000)
     def __str__(self):
-        return f'"{self.comment_text}" - {super().__str__()} on post {self.post}'
+        return f'"{self.comment_text}" - on thread {self.thread.__str__()}'
 

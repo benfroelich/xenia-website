@@ -1,4 +1,5 @@
 {% if post %}
+<h1>{{ post }}<h1>
 <h1>{{ post.title }}</h1>
 <p>published {{ post.pub_date }}</p>
 {% if post.pub_date != post.edit_date %}
@@ -8,7 +9,7 @@
 {% else %}
   <p>No post dag yo</p>
 {% endif %}
-<form action="{% url 'blog:comment' post.id %}" method="post">
+<form action="{% url 'blog:comment' 1 1 %}" method="post">
 {% csrf_token %}
 <fieldset>
     <legend><h2>Comment on "{{ post.title }}"</h2></legend>
@@ -17,8 +18,13 @@
 </fieldset>
 <input type="submit" value="Post">
 </form>
-{% for comment in comments %}
-    <p>
-		{{ comment.comment_text }}
-		</p>
+
+{% for t in post.thread_set.all %}
+  <h1>thread</h1>
+  <div>
+    {% for c in t.comment_set.all %}
+      <h3>{{ c.comment_text }}</h3>
+    {% endfor %}
+    <button>Reply</button>
+  </div>
 {% endfor %}
