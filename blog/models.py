@@ -31,7 +31,10 @@ class PublishMeta(models.Model):
     def is_recent(self):
         days_back = 3
         threshold = timezone.now() - datetime.timedelta(days=days_back)
-        return self.pub_date >= threshold or self.edit_date >= threshold
+        is_future = self.pub_date > timezone.now()
+        # edit date is concurrent or newer than publication date
+        # so it is adequate to check only edit date
+        return not is_future and self.edit_date >= threshold 
 
 class Post(PublishMeta):
     title = models.CharField(max_length=1000)

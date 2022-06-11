@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, reverse
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 
 from .models import Post, Comment, Thread
 
@@ -12,12 +13,15 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """ return the last 'num_items' posts """
-        return Post.objects.order_by('-pub_date')[:self.num_items]
+        return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:self.num_items]
 
 class PostView(generic.DetailView):
     template_name = 'blog/post.html'
     context_object_name = 'post'
     model = Post
+    def get_queryset(self):
+        """ excludes unpublished content """
+        return Post.objects.filter(pub_date__lte=timezone.now())
 
 def comment(request, thread_id, post_id):
     try:

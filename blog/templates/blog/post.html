@@ -9,22 +9,23 @@
 {% else %}
   <p>No post dag yo</p>
 {% endif %}
-<form action="{% url 'blog:comment' 1 1 %}" method="post">
-{% csrf_token %}
-<fieldset>
-    <legend><h2>Comment on "{{ post.title }}"</h2></legend>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-		<textarea id="comment" name="comment" required minlength="4" maxlength=1000 rows=8></textarea>
-</fieldset>
-<input type="submit" value="Post">
-</form>
-
 {% for t in post.thread_set.all %}
   <h1>thread</h1>
   <div>
     {% for c in t.comment_set.all %}
       <h3>{{ c.comment_text }}</h3>
     {% endfor %}
-    <button>Reply</button>
   </div>
+  <form action="{% url 'blog:comment' 1 2 %}" method="post" class="comment-form-hidden">
+  {% csrf_token %}
+  <fieldset>
+      <legend><h2>Comment on "{{ post.title }}"</h2></legend>
+      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      <textarea id="comment" name="comment" required minlength="4" maxlength=1000 rows=8></textarea>
+  </fieldset>
+  <input type="submit" value="Reply">
+  </form>
+  <button class=comment-toggle>Reply</button>
 {% endfor %}
+
+// todo - add new comment form, need to figure out template subst. or use e.g. react.js
