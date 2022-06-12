@@ -4,3 +4,4 @@ __pycache__
 .*.swp
 .my_pgpass
 .coverage
+.secret_key
