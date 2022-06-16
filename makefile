@@ -5,7 +5,7 @@ manage = manage.py
 python = python
 
 prereq:
-	echo reminder - must source ../bin/activate
+	$(info reminder - must source ../bin/activate)
 
 test: prereq
 	$(python) $(manage) test $(apps)

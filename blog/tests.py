@@ -4,7 +4,7 @@ import datetime
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import Post
+from .models import Post, Comment, Thread
 
 class PostModelTests(TestCase):
     def test_published_recently_with_future_post(self):
@@ -65,3 +65,19 @@ class PostDetailViewTests(TestCase):
         self.assertContains(resp, post.text)
 
 
+class CommentPostTests(TestCase):
+    def test_invalid_post(self):
+        thread_id = 1
+        post_id = 1
+        resp = self.client.post(reverse('blog:comment', args=(post_id, thread_id)), {'comment': 'testcomment'})
+        self.assertIn('comment', resp.context['error_message'])
+    
+    def test_new_thread(self):
+        #create a post and check if you can add a comment without providing an existing thread id
+        comment = 'testcomment'
+        post = create_post(days_offset = -1)
+        thread_id = 'new'  #signifies a new thread must be created
+        resp = self.client.post(reverse('blog:comment', args=(post.pk, thread_id)), {'comment': 'testcomment'})
+        redir = self.client.get(resp.url) # POST redirects to the blog post page
+        self.assertContains(redir, comment) # check that the new comment made it onto the blog page
+    

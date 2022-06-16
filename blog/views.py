@@ -25,8 +25,14 @@ class PostView(generic.DetailView):
 
 def comment(request, thread_id, post_id):
     try:
-        comment = Comment(comment_text = request.POST['comment'], thread_id = thread_id)
-    except (KeyError, Post.DoesNotExist):
+        # check if the thread already exists
+        if thread_id == 'new': # need to create new thread
+            thread = Thread(post_id = post_id)
+            thread.save()
+        else:
+            thread = Thread.objects.get(pk = thread_id)
+        comment = Comment(comment_text = request.POST['comment'], thread_id = thread.pk)
+    except (KeyError, Post.DoesNotExist, Thread.DoesNotExist):
         return render(request, 'blog/index.html', {
             'error_message': 'Somehow you tried to post a comment on a blog post thread which doesn\'t exist'
         }) 
