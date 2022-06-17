@@ -64,6 +64,14 @@ class PostDetailViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, post.text)
 
+def create_post_and_thread(self, first_comment):
+    # create a post and start a comment thread on it
+    post = create_post(days_offset = -1)
+    resp = self.client.post(reverse('blog:comment', args=(post.pk, 'new')), {'comment': first_comment})
+    thread = Thread.objects.get(post_id = post.pk)
+    redir = self.client.get(resp.url) # POST redirects to the blog post page
+    return (thread, redir)
+
 
 class CommentPostTests(TestCase):
     def test_invalid_post(self):
@@ -73,11 +81,31 @@ class CommentPostTests(TestCase):
         self.assertIn('comment', resp.context['error_message'])
     
     def test_new_thread(self):
-        #create a post and check if you can add a comment without providing an existing thread id
-        comment = 'testcomment'
-        post = create_post(days_offset = -1)
-        thread_id = 'new'  #signifies a new thread must be created
-        resp = self.client.post(reverse('blog:comment', args=(post.pk, thread_id)), {'comment': 'testcomment'})
-        redir = self.client.get(resp.url) # POST redirects to the blog post page
+        comment = 'test comment'
+        thread, redir = create_post_and_thread(self, comment)
         self.assertContains(redir, comment) # check that the new comment made it onto the blog page
+
+    def test_thread_response(self):
+        # create a post and start a comment thread on it
+        thread, redir = create_post_and_thread(self, 'hello werld')
+        cr = 'test comment response'
+        resp = self.client.post(reverse('blog:comment', args=(thread.post.pk, thread.pk)), {'comment': cr})
+        redir = self.client.get(resp.url) # POST redirects to the blog post page
+        self.assertContains(redir, cr) # check that the new comment made it onto the blog page
+
+    def test_comment_edit(self):
+        thread, redir = create_post_and_thread(self, 'first comment')
+        change = 'comment, redux'
+        c = Comment.objects.get(thread_id = thread.pk)
+        c.comment_text = change
+        c.save()
+        updated_post = self.client.get(reverse('blog:post', args=(thread.post_id,)))
+        self.assertContains(updated_post, change) # check that the new comment made it onto the blog page
+
+    def test_comment_gone_on_post_deletion(self):
+        thread, redir = create_post_and_thread(self, 'first comment')
+        Post.objects.get(pk = thread.post_id).delete()
+        self.assertEqual(len(Thread.objects.all()), 0)
+        self.assertEqual(len(Comment.objects.all()), 0)
+
     
