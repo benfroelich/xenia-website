@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 
 # TODO
 #class Author(models.Model):
@@ -28,6 +29,7 @@ class PublishMeta(models.Model):
         return f'published {self.pub_date} by {self.author}. edited {self.edit_date}. {self.likes} likes / {self.dislikes} dislikes'
     
     # recently posted or updated
+    @admin.display(boolean=True, ordering='pub_date', description='recent post',)
     def is_recent(self):
         days_back = 3
         threshold = timezone.now() - datetime.timedelta(days=days_back)
@@ -36,11 +38,15 @@ class PublishMeta(models.Model):
         # so it is adequate to check only edit date
         return not is_future and self.edit_date >= threshold 
 
+
 class Post(PublishMeta):
     title = models.CharField(max_length=1000)
     text = models.TextField(max_length=10000)
     def __str__(self):
         return f'"{self.pk} - {self.title}"'
+    @property
+    def short_description(self):
+        return self.text[:30]
 
 # a group of comments will be listed in a thread
 class Thread(models.Model):
@@ -50,7 +56,10 @@ class Thread(models.Model):
 
 class Comment(PublishMeta):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
-    comment_text = models.CharField(max_length=10000)
+    comment_text = models.TextField(max_length=10000)
     def __str__(self):
-        return f'"{self.comment_text}" - on thread {self.thread.__str__()}'
+        return f'"{self.short_description}" - on thread {self.thread.__str__()}'
+    @property
+    def short_description(self):
+        return self.comment_text[:30]
 
