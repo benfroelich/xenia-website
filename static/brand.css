@@ -1,0 +1,10 @@
+:root {
+  --brand-primary: #F9EBC8;
+  --brand-secondary: #FEFBE7;
+  --brand-tertiary: #DAE5D0;
+  --brand-quaternary: #A0BCC2;
+}
+
+body {
+  background-color: var(--brand-primary);
+}
