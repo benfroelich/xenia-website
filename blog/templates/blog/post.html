@@ -1,6 +1,9 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'brand.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap" rel="stylesheet">
 {% if post %}
 <h1>{{ post }}<h1>
 <h1>{{ post.title }}</h1>
@@ -17,10 +20,10 @@
   <h1>thread</h1>
   <div>
     {% for c in t.comment_set.all %}
-      <h3>{{ c.comment_text }}</h3>
+      <p>{{ c.comment_text }}</p>
     {% endfor %}
   </div>
-  <form action="{% url 'blog:comment' 1 2 %}" method="post" class="comment-form-hidden">
+  <form action="{% url 'blog:comment' post.pk t.pk %}" method="post" class="comment-form-hidden">
   {% csrf_token %}
   <fieldset>
       <legend><h3>Comment on "{{ post.title }}"</h3></legend>
