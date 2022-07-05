@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'brand.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap" rel="stylesheet">
+  <title>{% block title %}TODO - branding variables{% endblock %}</title>
+</head>
+
+<body>
+  <div id="top-menu">
+    {% block topmenu %}
+    <h1>TODO</h1>
+    {% endblock %}
+  </div>
+  <div id="sidebar">
+    {% block sidebar %}
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="{% url 'blog:index'%}">Blog</a></li>
+    </ul>
+    {% endblock %}
+  </div>
+
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+
+</html>
+
