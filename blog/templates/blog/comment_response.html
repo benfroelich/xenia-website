@@ -1,0 +1,10 @@
+<form action="{% url 'blog:comment' post_id thread_id %}" method="post" class="{{ form_class }}">
+{% csrf_token %}
+<fieldset>
+  {% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+  {% endif %}
+  <textarea id="comment" name="comment" required minlength="4" maxlength=1000 rows=8></textarea>
+</fieldset>
+<input type="submit" class="comment-toggle" value="Reply">
+</form>

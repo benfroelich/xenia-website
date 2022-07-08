@@ -7,7 +7,7 @@
 }
 
 body {
-  background: linear-gradient(0.3turn, var(--brand-secondary), var(--brand-quaternary));
+  /*background: linear-gradient(0.3turn, var(--brand-secondary), var(--brand-quaternary));*/
   font-family: var(--font), sans-serif;
 }
 

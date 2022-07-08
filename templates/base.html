@@ -14,15 +14,14 @@
 <body>
   <div id="top-menu">
     {% block topmenu %}
-    <h1>TODO</h1>
-    {% endblock %}
-  </div>
-  <div id="sidebar">
-    {% block sidebar %}
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="{% url 'blog:index'%}">Blog</a></li>
     </ul>
+    {% endblock %}
+  </div>
+  <div id="sidebar">
+    {% block sidebar %}
     {% endblock %}
   </div>
 

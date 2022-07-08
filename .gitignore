@@ -5,3 +5,4 @@ __pycache__
 .my_pgpass
 .coverage
 .secret_key
+node_modules

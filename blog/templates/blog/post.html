@@ -1,39 +1,46 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'brand.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap" rel="stylesheet">
-{% if post %}
-<h1>{{ post }}<h1>
-<h1>{{ post.title }}</h1>
-<p>published {{ post.pub_date }}</p>
-{% if post.pub_date != post.edit_date %}
-<p>updated {{ post.edit_date }}</p>
-{% endif %}
-<p>{{ post.text }}</p>
-{% else %}
-  <p>No post dag yo</p>
-{% endif %}
-{% for t in post.thread_set.all %}
-{% if t.comment_set.count > 0 %}
-  <h1>thread</h1>
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+  {% if post %}
+  <h1>{{ post.title }}</h1>
+  <p>published {{ post.pub_date }}</p>
+  {% if post.pub_date != post.edit_date %}
+  <p>updated {{ post.edit_date }}</p>
+  {% endif %}
+  <p>{{ post.text }}</p>
+  {% else %}
+    <p>No post dag yo</p>
+  {% endif %}
+  <h2>Comments</h2>
   <div>
-    {% for c in t.comment_set.all %}
+    {% include 'blog/comment_response.html' with post_id=post.pk thread_id="new" form_class="comment-form-visible" %} </div>
+  {% for t in post.thread_set.all %}
+  {% if t.comment_set.count > 0 %}
+    <div>
+      {% for c in t.comment_set.all %}
+      <p>
+        {% if c.author %} {{ c.author }} 
+        {% else %} anonymous {% endif %} 
+        wrote on {{ c.pub_date }} 
+        {% if c.edit_date != c.edit_date %} 
+        edited on {{ c.edit_date }} {% endif %}
+      </p>
       <p>{{ c.comment_text }}</p>
-    {% endfor %}
-  </div>
-  <form action="{% url 'blog:comment' post.pk t.pk %}" method="post" class="comment-form-hidden">
-  {% csrf_token %}
-  <fieldset>
-      <legend><h3>Comment on "{{ post.title }}"</h3></legend>
-      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-      <textarea id="comment" name="comment" required minlength="4" maxlength=1000 rows=8></textarea>
-  </fieldset>
-  <input type="submit" value="Reply">
-  </form>
-  <button class=comment-toggle>Reply</button>
-{% endif %}
-{% endfor %}
+      {% endfor %}
+      {% include 'blog/comment_response.html' with post_id=post.pk thread_id=t.pk form_class="comment-form-hidden" %}
+    </div>
+  {% endif %}
+  {% endfor %}
+<!-- <script>
+  // TODO move
+  let comments = ['one', 'two', 'three']
+  let myblock = document.getElementById('test')
+  for (const comment of comments) {
+      const element = document.createElement('p');
+      element.textContent = comment;
+      myblock.appendChild(element);
+    }
+</script>
 
-// todo - add new comment form, need to figure out template subst. or use e.g. react.js
+-->
+{% endblock content %}

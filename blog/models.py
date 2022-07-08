@@ -54,6 +54,10 @@ class Thread(models.Model):
     def __str__(self):
         return f'Comment Thread on {self.post.__str__()}'
 
+    # ordered by creation date, newest thread first
+    class Meta:
+        ordering = ['-pk']
+
 class Comment(PublishMeta):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
     comment_text = models.TextField(max_length=10000)
@@ -62,4 +66,9 @@ class Comment(PublishMeta):
     @property
     def short_description(self):
         return self.comment_text[:30]
+
+    # within a thread, comments are ordered oldest to newest
+    # so that it reads like a normal conversation
+    class Meta:
+        ordering = ['pub_date']
 
