@@ -2,6 +2,7 @@
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
   {% if post %}
+<div class="container">
   <h1>{{ post.title }}</h1>
   <p>published {{ post.pub_date }}</p>
   {% if post.pub_date != post.edit_date %}
@@ -13,24 +14,27 @@
   {% endif %}
   <h2>Comments</h2>
   <div>
-    {% include 'blog/comment_response.html' with post_id=post.pk thread_id="new" form_class="comment-form-visible" %} </div>
+    {% include 'blog/comment_response.html' with form_id="new_comment" post_id=post.pk thread_id="new" form_class="collapse show" %}
+  </div>
   {% for t in post.thread_set.all %}
   {% if t.comment_set.count > 0 %}
     <div>
       {% for c in t.comment_set.all %}
       <p>
-        {% if c.author %} {{ c.author }} 
-        {% else %} anonymous {% endif %} 
+        {{ c.author|default:"anonymous" }}
         wrote on {{ c.pub_date }} 
         {% if c.edit_date != c.edit_date %} 
         edited on {{ c.edit_date }} {% endif %}
       </p>
       <p>{{ c.comment_text }}</p>
       {% endfor %}
-      {% include 'blog/comment_response.html' with post_id=post.pk thread_id=t.pk form_class="comment-form-hidden" %}
+      <div>
+        {% include 'blog/comment_response.html' with form_id=t.chain_id post_id=post.pk thread_id=t.pk form_class="collapse" %}
+      </div>
     </div>
   {% endif %}
   {% endfor %}
+</div>
 <!-- <script>
   // TODO move
   let comments = ['one', 'two', 'three']

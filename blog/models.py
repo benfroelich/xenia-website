@@ -58,6 +58,10 @@ class Thread(models.Model):
     class Meta:
         ordering = ['-pk']
 
+    @property
+    def chain_id(self):
+        return f'thread_{self.pk}_post_{self.post.pk}'
+
 class Comment(PublishMeta):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
     comment_text = models.TextField(max_length=10000)
