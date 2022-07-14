@@ -20,8 +20,7 @@ from django.contrib.flatpages import views
 urlpatterns = [
     path('blog/', include('blog.urls')),
     path('admin/', admin.site.urls),
-    path('pages/', include('django.contrib.flatpages.urls')),
+    #path('pages/', include('django.contrib.flatpages.urls')),
     #path('about/', views.flatpage, {'url': '/about/'}, name='about'),
-    #re_path(r'^(?P<url>.*/)$', views.flatpage),
-
+    re_path(r'^(?P<url>.*/)$', views.flatpage),
 ]
