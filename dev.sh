@@ -1,0 +1,1 @@
+export DJANGO_SETTINGS_MODULE=froelich_leon.settings_dev
