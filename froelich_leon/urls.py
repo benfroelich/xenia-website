@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.contrib.flatpages import views
 from home.views import HomeView
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('blog/', include('blog.urls')),
+    #path('', TemplateView.as_view(template_name='home/home.html')),
     path('', HomeView.as_view()),
     path('admin/', admin.site.urls),
     #path('pages/', include('django.contrib.flatpages.urls')),
