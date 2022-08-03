@@ -40,3 +40,4 @@ def comment(request, thread_id, post_id):
     return HttpResponseRedirect(reverse('blog:post', args=(post_id,)))
 
 
+# Create your views here.
