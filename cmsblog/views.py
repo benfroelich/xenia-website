@@ -7,7 +7,7 @@ from django.utils import timezone
 from .models import Post, Comment, Thread
 
 class IndexView(generic.ListView):
-    template_name = 'blog/index.html'
+    template_name = 'cmsblog/index.html'
     context_object_name = 'latest_posts'
     num_items = 3
 
@@ -16,7 +16,7 @@ class IndexView(generic.ListView):
         return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:self.num_items]
 
 class PostView(generic.DetailView):
-    template_name = 'blog/post.html'
+    template_name = 'cmsblog/post.html'
     context_object_name = 'post'
     model = Post
     def get_queryset(self):
@@ -33,7 +33,7 @@ def comment(request, thread_id, post_id):
             thread = Thread.objects.get(pk = thread_id)
         comment = Comment(comment_text = request.POST['comment'], thread_id = thread.pk)
     except (KeyError, Post.DoesNotExist, Thread.DoesNotExist):
-        return render(request, 'blog/index.html', {
+        return render(request, 'cmsblog/index.html', {
             'error_message': 'Somehow you tried to post a comment on a blog post thread which doesn\'t exist'
         }) 
     comment.save()

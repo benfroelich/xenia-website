@@ -1,20 +1,24 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
+{% load wagtailuserbar %}
+{% load wagtailcore_tags %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block content %}
+{% wagtailuserbar %}
+<a href="{% pageurl page.get_parent %}">Back to index</a>
 {% if page %}
 <div class="container">
   <div class="row">
     <div class="col-md-8 offset-md-2">
     <h1>{{ page.title }}</h1>
-    {% if page.should_display_updated == True %}
-      <p>updated {{ page.edit_date|date:"SHORT_DATE_FORMAT" }}</p>
-    {% endif %}
-    <p>published {{ page.pub_date|date:"SHORT_DATE_FORMAT" }}</p>
-        {% include_block page.body %}
-    {% else %}
+      {% if page.should_display_updated == True %}
+        <p>updated {{ page.edit_date|date:"SHORT_DATE_FORMAT" }}</p>
+      {% endif %}
+      <p>published {{ page.pub_date|date:"SHORT_DATE_FORMAT" }}</p>
+{% include_block page.body %}
+{% else %}
       <p>No page dag yo</p>
-    {% endif %}
+{% endif %}
   <h2>Comments</h2>
   <div>
     {% include 'cmsblog/comment_response.html' with form_id="new_comment" post_id=page.id thread_id="new" form_class="collapse show" %}

@@ -109,14 +109,57 @@ class Post(Page, PublishMeta):
     ]
 
     # Parent page / subpage type rules
-    #parent_page_types = ['blog.BlogIndex'] # TODO
-    #subpage_types = []
+    parent_page_types = ['blog.BlogIndex']
+    subpage_types = []
 
     def __str__(self):
         return f'"{self.pk} - {self.title}"'
     @property
     def short_description(self):
         return self.body[0][:30]
+
+class BlogIndex(Page):
+
+    introduction = models.TextField(
+        help_text='Text to describe the page',
+        blank=True)
+
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        help_text='Landscape mode only; horizontal width between 1000px and 3000px.'
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel('introduction', classname="full"),
+        FieldPanel('image'),
+    ]
+    
+    # Speficies that only BlogPage objects can live under this index page
+    subpage_types = ['BlogPage']
+    def children(self):
+        return self.get_children().specific().live()
+
+    # Overrides the context to list all child items, that are live, by the
+    # date that they were published
+    # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
+    def get_context(self, request):
+        context = super(BlogIndexPage, self).get_context(request)
+        context['posts'] = BlogPage.objects.descendant_of(
+            self).live().order_by(
+            '-date_published')
+        return context
+    def serve_preview(self, request, mode_name):
+        # Needed for previews to work
+        return self.serve(request)
+
+    # Returns the child BlogPage objects for this BlogPageIndex.
+    # If a tag is used then it will filter the posts by tag.
+    def get_posts(self):
+        return BlogPage.objects.live().descendant_of(self)
 
 # a group of comments will be listed in a thread
 class Thread(models.Model):
