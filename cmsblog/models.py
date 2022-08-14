@@ -73,11 +73,9 @@ class PublishMeta(models.Model):
             else: 
                 raise NotImplementedError(f'{comp} not implemented')
 
-
-
-class Post(Page, PublishMeta):
+class BlogPost(Page, PublishMeta):
     # Database fields
-    #title = models.CharField(max_length=1000)
+    intro = models.CharField(max_length=1000)
     feed_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -93,15 +91,17 @@ class Post(Page, PublishMeta):
 
     # Search index configuration
     search_fields = Page.search_fields + PublishMeta.search_fields + [
-        #index.SearchField('title'),
+        index.SearchField('title'),
+        index.SearchField('intro'),
         index.SearchField('body'),
     ]
 
     # Editor panels configuration
-    content_panels = PublishMeta.content_panels + [
+    content_panels = [
+        FieldPanel('intro'),
         FieldPanel('body'),
         InlinePanel('related_links', label="Related links"),
-    ]
+    ] + PublishMeta.content_panels
 
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
@@ -109,7 +109,7 @@ class Post(Page, PublishMeta):
     ]
 
     # Parent page / subpage type rules
-    parent_page_types = ['blog.BlogIndex']
+    parent_page_types = ['cmsblog.BlogIndex']
     subpage_types = []
 
     def __str__(self):
@@ -139,19 +139,22 @@ class BlogIndex(Page):
     ]
     
     # Speficies that only BlogPage objects can live under this index page
-    subpage_types = ['BlogPage']
+    subpage_types = ['BlogPost']
+
     def children(self):
         return self.get_children().specific().live()
 
-    # Overrides the context to list all child items, that are live, by the
-    # date that they were published
+    # Overrides the context to add a list of all child items, that are live, 
+    # by the date that they were published
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
-        context = super(BlogIndexPage, self).get_context(request)
-        context['posts'] = BlogPage.objects.descendant_of(
+        context = super(BlogIndex, self).get_context(request)
+        # iterate over this in template 
+        context['active_posts'] = BlogPost.objects.descendant_of(
             self).live().order_by(
-            '-date_published')
+            '-pub_date')
         return context
+
     def serve_preview(self, request, mode_name):
         # Needed for previews to work
         return self.serve(request)
@@ -163,7 +166,7 @@ class BlogIndex(Page):
 
 # a group of comments will be listed in a thread
 class Thread(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
     def __str__(self):
         return f'Comment Thread on {self.post.__str__()}'
 
@@ -190,7 +193,7 @@ class Comment(PublishMeta):
         ordering = ['pub_date']
 
 class BlogPageRelatedLink(Orderable):
-    page = ParentalKey(Post, on_delete=models.CASCADE, related_name='related_links')
+    page = ParentalKey(BlogPost, on_delete=models.CASCADE, related_name='related_links')
     name = models.CharField(max_length=255)
     url = models.URLField()
 

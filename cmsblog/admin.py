@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post, Comment, Thread
+from .models import BlogPost, Comment, Thread
 
 def comment_fieldsets(titles = False):
     if titles:
@@ -40,12 +40,12 @@ class ThreadAdmin(admin.ModelAdmin):
     model = Thread
     inlines = [CommentInline]
 
-class PostAdmin(admin.ModelAdmin):
+class BlogPostAdmin(admin.ModelAdmin):
     inlines = [ThreadInline]
     list_display = ('title', 'author', 'pub_date', 'edit_date', 'is_recent')
     list_filter = ['pub_date', 'author']
     search_fields = ['text', 'title', 'author']
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(Thread, ThreadAdmin)
 admin.site.register(Comment, CommentAdmin)
