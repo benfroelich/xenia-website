@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Post, Comment, Thread
+from .models import BlogPost, Comment, Thread
 
 class IndexView(generic.ListView):
     template_name = 'cmsblog/index.html'
@@ -18,7 +18,7 @@ class IndexView(generic.ListView):
 class PostView(generic.DetailView):
     template_name = 'cmsblog/post.html'
     context_object_name = 'post'
-    model = Post
+    model = BlogPost
     def get_queryset(self):
         """ excludes unpublished content """
         return Post.objects.filter(pub_date__lte=timezone.now())
