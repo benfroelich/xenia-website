@@ -6,3 +6,4 @@ __pycache__
 .coverage
 .secret_key
 node_modules
+media

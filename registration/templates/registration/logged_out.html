@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<p>Logged out. Thanks for visiting!</p>
+
+{# Assumes you set up the password_reset view in your URLconf #}
+<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+
+{% endblock %}
