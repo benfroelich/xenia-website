@@ -16,3 +16,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# send email to console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+

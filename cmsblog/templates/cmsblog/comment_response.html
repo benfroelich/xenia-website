@@ -1,19 +1,23 @@
 <!-- form_class is used to allow hiding the form for replies to existing threads using css and js -->
-{% if thread_id != 'new' %}
-  <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#{{ form_id }}" 
-    aria-expanded="false" aria-controls={{ form_id }}>
-    Reply
-  </button>
+{% if not user.is_authenticated %}
+<p><a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}>Log in</a> to comment</p>
+{% else %}
+  {% if thread_id != 'new' %}
+    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#{{ form_id }}" 
+      aria-expanded="false" aria-controls={{ form_id }}>
+      Reply
+    </button>
+  {% endif %}
+  <form action="{% url 'blog:comment' post_id thread_id %}" method="post" class="{{ form_class }}" id="{{ form_id }}">
+    {% csrf_token %}
+    <div class="mb-3">
+      {% if error_message %} {# TODO why here? #}
+        <p><strong>{{ error_message }}</strong></p>
+      {% endif %}
+      <label for="{{ form_id }}_text" class="form-label">Your comment</label>
+      <textarea id="{{ form_id }}_text" class="form-control" 
+        name="comment" required minlength="4" maxlength=1000 rows=5></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 {% endif %}
-<form action="{% url 'blog:comment' post_id thread_id %}" method="post" class="{{ form_class }}" id="{{ form_id }}">
-  {% csrf_token %}
-  <div class="mb-3">
-    {% if error_message %} <!-- TODO why here? -->
-      <p><strong>{{ error_message }}</strong></p>
-    {% endif %}
-    <label for="{{ form_id }}_text" class="form-label">Your comment</label>
-    <textarea id="{{ form_id }}_text" class="form-control" 
-      name="comment" required minlength="4" maxlength=1000 rows=5></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>

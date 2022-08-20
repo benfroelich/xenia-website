@@ -13,7 +13,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """ return the last 'num_items' posts """
-        return Post.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:self.num_items]
+        return BlogPost.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:self.num_items]
 
 class PostView(generic.DetailView):
     template_name = 'cmsblog/post.html'

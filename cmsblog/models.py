@@ -5,6 +5,7 @@ import datetime
 
 # wagtail-related
 from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtail.models import Page, Orderable
 from wagtail.fields import StreamField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
@@ -22,7 +23,7 @@ from wagtail.images.blocks import ImageChooserBlock
 
 # information that comes with any published content, e.g.
 # blog posts, comments, reviews
-class PublishMeta(models.Model):
+class PublishMeta(index.Indexed, ClusterableModel):
     # Database Fields
     pub_date = models.DateTimeField('date published', default=timezone.now)
     edit_date = models.DateTimeField('date last modified', auto_now=True)

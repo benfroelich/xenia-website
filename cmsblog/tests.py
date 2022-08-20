@@ -1,35 +1,36 @@
 from django.test import TestCase
 
+import json
 import datetime
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import Post, Comment, Thread
+from .models import BlogPost, Comment, Thread
 
-class PostModelTests(TestCase):
+class BlogPostModelTests(TestCase):
     def test_published_recently_with_future_post(self):
         """ verify that is_recent() returns False for a post
         that was published in the future """
         future = timezone.now() + datetime.timedelta(days=30)
-        future_post = Post(pub_date=future, edit_date=future)
+        future_post = BlogPost(pub_date=future, edit_date=future, path="p", depth=1, intro="intro")
         self.assertIs(future_post.is_recent(), False)
     def test_published_recently_with_old_ass_post(self):
         """ verify is_recent() returns False for an old post """
         old_time = timezone.now() + datetime.timedelta(days=-666)
-        p = Post(pub_date=old_time, edit_date=old_time)
+        p = BlogPost(pub_date=old_time, edit_date=old_time, path="p", depth=1, intro="intro")
         self.assertIs(p.is_recent(), False)
     def test_publised_recently_with_new_post(self):
         """ verify is_recent() returns True for a recent post """
         recent_time = timezone.now() - datetime.timedelta(days=2)
-        p = Post(pub_date=recent_time, edit_date=recent_time)
+        p = BlogPost(pub_date=recent_time, edit_date=recent_time)
         self.assertIs(p.is_recent(), True)
 
-def create_post(title="title", text="fodder", days_offset=0):
+def create_post(title="title", body=json.dumps({'paragraph': 'fodder'}), days_offset=0):
     time = timezone.now() + datetime.timedelta(days=days_offset)
-    return Post.objects.create(title=title, text=text, pub_date=time, 
-            edit_date=time, author='automated_test')
+    return BlogPost.objects.create(title=title, body=body, pub_date=time, 
+            edit_date=time, author='automated_test', path="p", depth=1, intro="intro")
 
-class PostIndexViewTests(TestCase):
+class BlogPostIndexViewTests(TestCase):
     def test_no_posts(self):
         resp = self.client.get(reverse('blog:index'))
         self.assertEqual(resp.status_code, 200)
@@ -48,7 +49,7 @@ class PostIndexViewTests(TestCase):
         resp = self.client.get(reverse('blog:index'))
         self.assertQuerysetEqual(resp.context['latest_posts'], [post_past])
 
-class PostDetailViewTests(TestCase):
+class BlogPostDetailViewTests(TestCase):
     def test_invalid_pk(self):
         resp = self.client.get(reverse('blog:post', args=(1,)))
         self.assertEqual(resp.status_code, 404)
@@ -62,7 +63,7 @@ class PostDetailViewTests(TestCase):
         post = create_post(days_offset=-1000)
         resp = self.client.get(reverse('blog:post', args=(post.pk,)))
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, post.text)
+        self.assertContains(resp, post.body)
 
 def create_post_and_thread(self, first_comment):
     # create a post and start a comment thread on it
@@ -73,7 +74,7 @@ def create_post_and_thread(self, first_comment):
     return (thread, redir)
 
 
-class CommentPostTests(TestCase):
+class CommentBlogPostTests(TestCase):
     def test_invalid_post(self):
         thread_id = 1
         post_id = 1
@@ -104,7 +105,7 @@ class CommentPostTests(TestCase):
 
     def test_comment_gone_on_post_deletion(self):
         thread, redir = create_post_and_thread(self, 'first comment')
-        Post.objects.get(pk = thread.post_id).delete()
+        BlogPost.objects.get(pk = thread.post_id).delete()
         self.assertEqual(len(Thread.objects.all()), 0)
         self.assertEqual(len(Comment.objects.all()), 0)
 

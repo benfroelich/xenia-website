@@ -1,5 +1,5 @@
 """
-Common Django settings for the terra venusta project.
+common django settings for the terra venusta project.
 """
 
 from pathlib import Path
@@ -15,13 +15,19 @@ CSRF_COOKIE_SECURE = True
 with open('.secret_key') as f:
     SECRET_KEY = f.read().strip()
 
+WAGTAIL_FRONTEND_LOGIN_TEMPLATE = 'registration/login.html'
+
 # currently this is for terravenustalandscapes.com
 SITE_ID = 2
 # Application definition
 
+LOGIN_REDIRECT_URL = '/profile/'
+
 INSTALLED_APPS = [
     'cmsblog.apps.CmsblogConfig',
     'home.apps.HomeConfig',
+    'registration.apps.RegistrationConfig',
+    'user_profile.apps.UserProfileConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
