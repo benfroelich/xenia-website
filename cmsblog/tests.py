@@ -5,9 +5,25 @@ import datetime
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import BlogPost, Comment, Thread
+from wagtail.test.utils.form_data import nested_form_data, streamfield
+from wagtail.test.utils import WagtailPageTests
 
-class BlogPostModelTests(TestCase):
+from .models import BlogPost, Comment, Thread, BlogIndex
+
+# remember to prefix any test functions with "test_"
+
+class BlogPostModelTests(WagtailPageTests):
+    def test_hierarchy(self):
+        self.assertCanCreateAt(BlogIndex, BlogPost)
+    def test_can_create_a_post(self):
+        index = BlogIndex.objects.create()
+        self.assertCanCreate(index, BlogPost, nested_form_data({
+            'title': 'About us',
+            'body': streamfield([
+                ('text', 'Lorem ipsum dolor sit amet'),
+            ])
+        }))
+
     def test_published_recently_with_future_post(self):
         """ verify that is_recent() returns False for a post
         that was published in the future """
@@ -25,10 +41,21 @@ class BlogPostModelTests(TestCase):
         p = BlogPost(pub_date=recent_time, edit_date=recent_time)
         self.assertIs(p.is_recent(), True)
 
-def create_post(title="title", body=json.dumps({'paragraph': 'fodder'}), days_offset=0):
+def create_post(title='title', body='Lorem ipsum dolor sit amet', days_offset=0):
     time = timezone.now() + datetime.timedelta(days=days_offset)
-    return BlogPost.objects.create(title=title, body=body, pub_date=time, 
-            edit_date=time, author='automated_test', path="p", depth=1, intro="intro")
+    index = BlogIndex.objects.create(path="/", depth=1, title="blog idx", slug="blg")
+    post = BlogPost(title=title, path='p', pub_date=time, edit_date=time, author='test',
+            depth=1, intro='intro', slug='slag')
+    post.body = json.dumps(
+            [
+                {'type': 'text', 'value': body}
+            ]
+        )
+    post.save()
+    post.save_revision().publish()
+    return post
+    #return BlogPost.objects.create(parent=index, title=title, body=body, pub_date=time, 
+    #        edit_date=time, author='automated_test', path="p", depth=1, intro="intro")
 
 class BlogPostIndexViewTests(TestCase):
     def test_no_posts(self):
@@ -70,6 +97,7 @@ def create_post_and_thread(self, first_comment):
     post = create_post(days_offset = -1)
     resp = self.client.post(reverse('blog:comment', args=(post.pk, 'new')), {'comment': first_comment})
     thread = Thread.objects.get(post_id = post.pk)
+    print(resp.url)
     redir = self.client.get(resp.url) # POST redirects to the blog post page
     return (thread, redir)
 

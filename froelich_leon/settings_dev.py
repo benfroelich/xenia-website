@@ -19,4 +19,5 @@ ALLOWED_HOSTS = []
 # send email to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+CRISPY_FAIL_SILENTLY = not DEBUG
 

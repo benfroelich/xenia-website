@@ -1,6 +1,5 @@
 .PHONY: coverage test prereq
 
-apps = blog
 manage = manage.py
 python = python
 

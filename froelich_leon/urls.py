@@ -39,6 +39,7 @@ urlpatterns = [
     path('pages/', include(wagtail_urls)),
 
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('registration.urls')),
     path('profile/', include('user_profile.urls')),
 
     re_path(r'^(?P<url>.*/)$', views.flatpage),

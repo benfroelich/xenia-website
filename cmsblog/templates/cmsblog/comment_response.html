@@ -1,6 +1,5 @@
-<!-- form_class is used to allow hiding the form for replies to existing threads using css and js -->
 {% if not user.is_authenticated %}
-<p><a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}>Log in</a> to comment</p>
+  <p><a href="{% url 'register' %}">Register</a> or <a href="{% url 'login' %}">Log in</a> to comment</p>
 {% else %}
   {% if thread_id != 'new' %}
     <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#{{ form_id }}" 

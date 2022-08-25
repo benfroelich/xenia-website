@@ -8,18 +8,22 @@
 
     <div class="intro">{{ page.intro|richtext }}</div>
 
-    {% for post in active_posts %}
-        <div class="card" style="width: 18rem;">
-          {% image post.feed_image max-400x400 %}
-          <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="card-text">{{ post.intro }}</p>
-            <p class="card-text">{{ post.edit_date|date:"SHORT_DATE_FORMAT" }}</p>
-            <a href="{% pageurl post %}" class="btn btn-primary">
-              View Post
-            </a>
+    {% if not active_posts %}
+    <h1>Nothing is posted</h1>
+    {% else %}
+      {% for post in active_posts %}
+          <div class="card" style="width: 18rem;">
+            {% image post.feed_image max-400x400 %}
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">{{ post.intro }}</p>
+              <p class="card-text">{{ post.edit_date|date:"SHORT_DATE_FORMAT" }}</p>
+              <a href="{% pageurl post %}" class="btn btn-primary">
+                View Post
+              </a>
+            </div>
           </div>
-        </div>
-    {% endfor %}
+      {% endfor %}
+    {% endif %}
 
 {% endblock %}
