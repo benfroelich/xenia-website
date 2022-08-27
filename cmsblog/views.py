@@ -33,7 +33,7 @@ def comment(request, thread_id, post_id):
             thread.save()
         else:
             thread = Thread.objects.get(pk = thread_id)
-        comment = Comment(comment_text = request.POST['comment'], thread_id = thread.pk)
+        comment = Comment(comment_text = request.POST['comment'], author = request.user.username, thread_id = thread.pk)
     except (KeyError, BlogPost.DoesNotExist, Thread.DoesNotExist):
         return render(request, 'cmsblog/blog_index.html', {
             'error_message': 'Somehow you tried to post a comment on a blog post thread which doesn\'t exist'
