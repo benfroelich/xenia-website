@@ -14,15 +14,15 @@ def comment_fieldsets(titles = False):
                 'fields': ('comment_text',)
             }),
             (meta, {
-                'fields': (('author', 'pub_date'), ('likes', 'dislikes'))
+                'fields': (('owner', 'first_published_at'), ('likes', 'dislikes'))
             }),
         )
 
 class CommentAdmin(admin.ModelAdmin):
     model = Comment
-    list_display = ('short_description', 'author', 'pub_date', 'edit_date', 'is_recent')
-    list_filter = ['pub_date', 'author']
-    search_fields = ['comment_text', 'author']
+    list_display = ('short_description', 'owner', 'first_published_at', 'last_published_at')
+    list_filter = ['first_published_at', 'owner']
+    search_fields = ['comment_text', 'owner']
     fieldsets = comment_fieldsets(True)
     
 class CommentInline(admin.StackedInline):
@@ -42,9 +42,9 @@ class ThreadAdmin(admin.ModelAdmin):
 
 class BlogPostAdmin(admin.ModelAdmin):
     inlines = [ThreadInline]
-    list_display = ('title', 'author', 'pub_date', 'edit_date', 'is_recent')
-    list_filter = ['pub_date', 'author']
-    search_fields = ['text', 'title', 'author']
+    list_display = ('title', 'owner', 'first_published_at', 'last_published_at')
+    list_filter = ['first_published_at', 'owner']
+    search_fields = ['text', 'title', 'owner']
 
 admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(Thread, ThreadAdmin)
