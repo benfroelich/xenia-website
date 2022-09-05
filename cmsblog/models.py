@@ -96,7 +96,6 @@ class BlogIndex(Page):
         related_name='+',
         help_text='Landscape mode only; horizontal width between 1000px and 3000px.'
     )
-
         
     content_panels = [ FieldPanel('introduction', classname="full"), ] \
         + Page.content_panels \
@@ -155,6 +154,9 @@ class Comment(models.Model):
     @property
     def short_description(self):
         return self.comment_text[:30]
+
+    def edited(self):
+        return self.last_published_at > self.first_published_at
 
     # within a thread, comments are ordered oldest to newest
     # so that it reads like a normal conversation

@@ -7,12 +7,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- bootstrap css -->
+  <!-- css -->
   <link rel="stylesheet" type="text/css" href="{% static 'brand.css' %}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <title>{% block title %}TODO - branding variables{% endblock %}</title>
 </head>
 
@@ -35,7 +35,6 @@
             <li class="nav-item">
 {% load wagtailcore_tags %}
               <a class="nav-link active" href="{% slugurl 'blog' %}">Blog</a>
-            </li>
             </li>
             {% load flatpages %}
             <!-- services flatpages -->
