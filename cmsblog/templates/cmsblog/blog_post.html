@@ -4,7 +4,7 @@
 {% block title %}{{ page.title }}{% endblock %}
 {% block content %}
 {% wagtailuserbar %}
-<a href="{% pageurl page.get_parent %}">Back to index</a>
+<a href="{% pageurl page.get_parent %}" class="link-dark">Back to index</a>
 {% if page %}
 <div class="container">
   <div class="row">

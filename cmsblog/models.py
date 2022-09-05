@@ -145,9 +145,12 @@ class Comment(models.Model):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
     comment_text = models.TextField(max_length=10000)
 
-    first_published_at = models.DateTimeField('date published', default=timezone.now)
+    first_published_at = models.DateTimeField('date published', auto_now_add=True)
     last_published_at = models.DateTimeField('date last modified', auto_now=True)
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
+    # this will get incremented every time save is executed, so the true
+    # default is 1
+    edits = models.PositiveIntegerField('number of edits', default=0)
 
     def __str__(self):
         return f'"{self.short_description}" - on thread {self.thread.__str__()}'
@@ -156,7 +159,11 @@ class Comment(models.Model):
         return self.comment_text[:30]
 
     def edited(self):
-        return self.last_published_at > self.first_published_at
+        return self.edits > 1
+
+    def save(self, *args, **kwargs):
+        self.edits += 1
+        super().save(*args, **kwargs)
 
     # within a thread, comments are ordered oldest to newest
     # so that it reads like a normal conversation
