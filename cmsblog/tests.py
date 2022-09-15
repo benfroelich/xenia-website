@@ -10,9 +10,9 @@ from wagtail.test.utils.form_data import nested_form_data, streamfield
 from wagtail.test.utils import WagtailPageTests
 from wagtail.core.models import Site, Page
 
+from htmlvalidator.client import ValidatingClient
 
 from .models import BlogPost, Comment, Thread, BlogIndex
-
 
 # remember to prefix any test functions with "test_"
 
@@ -24,7 +24,6 @@ class CommentModelTests(TestCase):
     def test_creation(self):
         pass
 
-tracker = 0
 def create_post(title='post title', body='Lorem ipsum dolor sit amet', days_offset=0):
     # first, create a user who will be the owner of the post
     uname = 'test'
@@ -50,7 +49,6 @@ def create_post(title='post title', body='Lorem ipsum dolor sit amet', days_offs
     site = Site.objects.get(id=1)
     site.root_page = index
     site.save()
-    tracker += 1
 
     return (uname, pw, post)
 
@@ -73,6 +71,10 @@ def create_post_and_thread(self, first_comment):
     return (thread, redir)
 
 class CommentBlogPostTests(TestCase):
+    def setUp(self):
+        super(type(self), self).setUp()
+        self.client = ValidatingClient()
+
     def test_new_thread(self):
         comment = 'test comment'
         thread, redir = create_post_and_thread(self, comment)

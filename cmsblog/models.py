@@ -165,6 +165,14 @@ class Comment(models.Model):
         self.edits += 1
         super().save(*args, **kwargs)
 
+    @property
+    def text_target(self):
+        return f'comment_text_target{self.pk}'
+
+    @property
+    def form_target(self):
+        return f'comment_form_target{self.pk}'
+
     # within a thread, comments are ordered oldest to newest
     # so that it reads like a normal conversation
     class Meta:

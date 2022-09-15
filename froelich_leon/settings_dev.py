@@ -21,3 +21,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CRISPY_FAIL_SILENTLY = not DEBUG
 
+# currently disabled because wagtail is using non-standard-conforming
+# html (though it renders fine)
+HTMLVALIDATOR_ENABLED = False
+HTMLVALIDATOR_OUTPUT = 'file'
+HTMLVALIDATOR_FAILFAST = True
+HTMLVALIDATOR_VNU_JAR = '~/Downloads/vnu.jar'
+
+if HTMLVALIDATOR_ENABLED:
+    MIDDLEWARE += ("htmlvalidator.middleware.HTMLValidator",)
+

@@ -20,45 +20,53 @@
 {% endif %}
   <h2>Comments</h2>
   <div class="container border-top py-3">
-    {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id="new" form_class="collapse show" mode="comment" %}
+    <!-- create a new comment thread -->
+    {% include 'cmsblog/comment_response.html' with form_id="new_comment" post_id=page.id thread_id="new" form_class="collapse show" mode="comment" %}
     {% for t in page.thread_set.all %}
       {% if t.comment_set.count > 0 %}
-      <div class="my-3 p-3 border-start">
-        {% for c in t.comment_set.all %}
-          <p> 
-            {{ c.comment_text }} 
-            - <span class="fw-bold"> {{ c.owner|default:"anonymous" }} </span>
-              <span class="text-muted"> 
-              {{ c.last_published_at }} 
-              {% if c.edited %} 
-                <!-- pencil edit icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-</svg>
-              {% endif %}
-            </span> 
-          </p>
-        {% endfor %}
-        {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
-          {% endif %}
-      </div>
-        {% endfor %}
-      </div>
-    </div>
+        <div class="my-3 p-3 border-start">
+          {% for c in t.comment_set.all %}
+            <!-- each comment -->
+            {% include 'cmsblog/comment_response.html' with form_id=c.form_target post_id=page.id thread_id=t.pk form_class="collapse" mode="comment" comment=c %}
+          {% endfor %}
+          <!-- reply to this thread -->
+          {% include 'cmsblog/comment_response.html' with form_id=t.pk post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 </div>
-<!-- <script>
-  // TODO move
-  let comments = ['one', 'two', 'three']
-  let myblock = document.getElementById('test')
-  for (const comment of comments) {
-      const element = document.createElement('p');
-      element.textContent = comment;
-      myblock.appendChild(element);
+  </div>
+</div>
+<!-- 
+<script>
+  // when edit clicked, show edit comment dialog or another page?
+  // SO has edits on a separate page...
+  // FB is inline and very simple, just toggle the field from <p> to text box on click
+  // let's try: on click, replace prev with form with same text content
+  // need emoji and highlighting urls?
+  // when delete clicked, popup asking if they want to confirm
+
+  const comment_edit = document.querySelector('comment_edit');
+  const comment_delete = document.querySelector('comment_delete');
+  comment_edit.addEventListener('click', (event) => {
+
+    });
+
+</script>
+-->
+<script>
+  function delete_dialog(event) {
+      alert("delete confirmation");
     }
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("button.comment-delete").forEach((btn) => {
+        btn.addEventListener("click", delete_dialog)
+      });
+    });
+//   data-text-target="{{ text_target }}" data-form-target="{{ form_target }}">
 </script>
 
--->
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
