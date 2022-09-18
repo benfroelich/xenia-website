@@ -19,7 +19,11 @@
           data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
           Edit
         </button>
-        <button class="btn btn-secondary comment-delete">Delete</button>
+        <button data-thread-id="{{ thread_id}}" data-comment-id="{{ comment_pk }}" 
+          data-post-id="{{ post_id }}" data-toggle="modal" data-target="#delete_modal" 
+          class="btn btn-secondary comment-delete">
+          Delete
+        </button>
       {% endif %}
     </p>
   {% endif %}

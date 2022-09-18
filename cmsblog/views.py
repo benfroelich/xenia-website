@@ -6,7 +6,20 @@ from datetime import datetime
 
 from .models import BlogPost, Comment, Thread
 
+#def comment_delete(request, comment_id):
+#    if request.method == "DELETE":
+#        try:
+#            comment = Comment.objects.get(pk=comment_id)
+#            comment.delete()
+#        except (KeyError, Comment.DoesNotExist):
+#            return render(request, 'cmsblog/blog_index.html', {
+#                'error_message': 'Could not delete this comment'
+#            }) 
+#    page = get_object_or_404(BlogPost, pk=post_id)
+#    return HttpResponseRedirect(page.get_url())
+
 def comment(request, thread_id, post_id):
+    # this api uses POST for updates and new comments
     if request.method == "POST":
         try:
             # check if the thread already exists
@@ -15,17 +28,22 @@ def comment(request, thread_id, post_id):
                 thread.save()
             else:
                 thread = Thread.objects.get(pk = thread_id)
-            # check if this is an update or a new comment
+            # check if we are working with an existing post, meaning
+            # either edit (PUT) or deletion (DELETE)
             if 'comment_pk' in request.POST:
                 comment = Comment.objects.get(pk=request.POST['comment_pk'])
-                print("here we are")
+                # verify that the owner is the current user
                 if comment.owner == request.user:
-                    print("inner")
-                    comment.comment_text = request.POST['comment']
-                    comment.last_published_at = datetime.now()
-                    comment.save()
+                    # handle deletion
+                    if request.POST.get('_method', '').lower() == "delete":
+                        comment.delete()
+                        print("delete route")
+                    else # handle edit
+                        comment.comment_text = request.POST['comment']
+                        comment.last_published_at = datetime.now()
+                        comment.save()
             else:
-                # then verify that the owner is the current user
+                # new comment
                 comment = Comment(comment_text = request.POST['comment'], 
                         owner = request.user, thread_id = thread.pk)
                 comment.save()

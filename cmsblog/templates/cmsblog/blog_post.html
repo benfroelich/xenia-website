@@ -30,13 +30,35 @@
             {% include 'cmsblog/comment_response.html' with form_id=c.form_target post_id=page.id thread_id=t.pk form_class="collapse" mode="comment" comment=c %}
           {% endfor %}
           <!-- reply to this thread -->
-          {% include 'cmsblog/comment_response.html' with form_id=t.pk post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+          {% include 'cmsblog/comment_response.html' with form_id="new-comment-thread" post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
         </div>
       {% endif %}
     {% endfor %}
   </div>
 </div>
   </div>
+
+  <!-- modal for deletion confirmation -->
+  <div class="modal" id="delete_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Deletion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Confirm Comment Deletion</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Delete</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 <!-- 
 <script>
@@ -55,9 +77,18 @@
 
 </script>
 -->
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous">
+</script>
 <script>
   function delete_dialog(event) {
-      alert("delete confirmation");
+      var result = confirm("Confirm comment deletion");
+        if(result) {
+            console.log("deleted");
+        }
     }
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("button.comment-delete").forEach((btn) => {
@@ -65,13 +96,5 @@
       });
     });
 //   data-text-target="{{ text_target }}" data-form-target="{{ form_target }}">
-</script>
-
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
-<script>
-    
 </script>
 {% endblock content %}
