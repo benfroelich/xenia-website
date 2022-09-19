@@ -19,17 +19,15 @@
           data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
           Edit
         </button>
-        <button data-thread-id="{{ thread_id}}" data-comment-id="{{ comment_pk }}" 
-          data-post-id="{{ post_id }}" data-toggle="modal" data-target="#delete_modal" 
-          class="btn btn-secondary comment-delete">
+        <button data-thread-id="{{ thread_id}}" data-comment-id="{{ comment.pk }}" 
+          data-post-id="{{ post_id }}" data-bs-toggle="modal" data-bs-target="#delete_modal" 
+          class="btn btn-secondary">
           Delete
         </button>
       {% endif %}
     </p>
   {% endif %}
-  {% if not user.is_authenticated %}
-  <a href="{% url 'register' %}" class="link-dark">Register</a> or <a href="{% url 'login' %}" class="link-dark">Log in</a> to {{ mode }}
-  {% else %}
+  {% if user.is_authenticated %}
     {% if mode == 'reply' %}
       <button class="btn btn-primary" type="button" data-bs-toggle="collapse" 
         data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
@@ -39,14 +37,7 @@
     <form action="{% url 'blog:comment' post_id thread_id %}" 
       method="post" class="{{ form_class }}" id="{{ form_id }}">
       {% csrf_token %}
-      <div class="mb-3">
-        {% if error_message %} {# comment form errors #}
-          <p><strong>{{ error_message }}</strong></p>
-        {% endif %}
-        <label for="{{ form_id }}_text" class="form-label">Your comment</label>
-        <textarea id="{{ form_id }}_text" class="form-control" 
-          name="comment" required minlength="4" maxlength=1000 rows=5>{{ comment.comment_text }}</textarea>
-      </div>
+      
       <button type="submit" class="btn btn-primary">Submit</button>
       <input type="hidden" name="comment_pk" value="{{ comment.pk }}">
     </form>

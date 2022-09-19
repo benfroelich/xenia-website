@@ -20,6 +20,9 @@
 {% endif %}
   <h2>Comments</h2>
   <div class="container border-top py-3">
+  {% if not user.is_authenticated %}
+  <a href="{% url 'register' %}" class="link-dark">Register</a> or <a href="{% url 'login' %}" class="link-dark">Log in</a> to comment
+  {% endif %}
     <!-- create a new comment thread -->
     {% include 'cmsblog/comment_response.html' with form_id="new_comment" post_id=page.id thread_id="new" form_class="collapse show" mode="comment" %}
     {% for t in page.thread_set.all %}
@@ -39,62 +42,74 @@
   </div>
 
   <!-- modal for deletion confirmation -->
-  <div class="modal" id="delete_modal" tabindex="-1" role="dialog">
+  <div class="modal fade" id="delete_modal" tabindex="-1">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Confirm Deletion</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <button type="button" class="btn-close" 
+            data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>Confirm Comment Deletion</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Delete</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{% url 'blog:comment' 0 0 %}" 
+            method="post" id="{{ form_id }}">
+            {% csrf_token %}
+            <input type="hidden" id="comment_id" name="comment_id" value="unset">
+            <input type="hidden" id="thread_id" name="thread_id" value="unset">
+            <input type="hidden" id="post_id" name="post_id" value="unset">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" id="delete_confirm" class="btn btn-primary">Delete</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
   </div>
 
 </div>
-<!-- 
-<script>
-  // when edit clicked, show edit comment dialog or another page?
-  // SO has edits on a separate page...
-  // FB is inline and very simple, just toggle the field from <p> to text box on click
-  // let's try: on click, replace prev with form with same text content
-  // need emoji and highlighting urls?
-  // when delete clicked, popup asking if they want to confirm
 
-  const comment_edit = document.querySelector('comment_edit');
-  const comment_delete = document.querySelector('comment_delete');
-  comment_edit.addEventListener('click', (event) => {
-
-    });
-
-</script>
--->
-
-<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous">
-</script>
-<script>
-  function delete_dialog(event) {
-      var result = confirm("Confirm comment deletion");
-        if(result) {
-            console.log("deleted");
-        }
-    }
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("button.comment-delete").forEach((btn) => {
-        btn.addEventListener("click", delete_dialog)
-      });
-    });
-//   data-text-target="{{ text_target }}" data-form-target="{{ form_target }}">
-</script>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+
+  const delete_modal = document.getElementById('delete_modal')
+  delete_modal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    const modal_ = delete_modal.querySelector('.modal-body input')
+
+    // add specific info to the delete form in the modal
+    const comment_id = button.getAttribute('data-comment-id')
+    const post_id = button.getAttribute('data-post-id')
+    const thread_id = button.getAttribute('data-thread-id')
+    delete_modal.querySelector('#comment_id').value = comment_id
+    delete_modal.querySelector('#post_id').value = post_id
+    delete_modal.querySelector('#thread_id').value = thread_id
+  })
+
+  /*
+  $('#delete_modal').on('show.bs.modal', function (event) {
+    // this is the button that triggered the modal
+    // it contains the comment specifics that will
+    // be required to actually delete the comment
+    const button = $(event.relatedTarget) 
+    const comment_id = button.data('commentId')
+    const post_id = button.data('postId')
+    const thread_id = button.data('threadId')
+    console.log(button.data())
+
+    // assign the variables to the delete button on the dialog
+    $('#delete_confirm').off('click')
+    $('#delete_confirm').click(function() {
+        delete_comment(post_id, thread_id, comment_id)
+      })
+  })
+  */
+</script>
+{% endblock scripts %}
