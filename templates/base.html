@@ -54,7 +54,9 @@
             {% if user.is_authenticated %}
               <a class="nav-link active" href="{% url 'logout' %}">Log Out</a>
             {% else %}
-              <a class="nav-link active" href="{% url 'login' %}">Log In or Sign Up</a>
+            <a class="nav-link active px-2" href="{% url 'login' %}">Log In</a>
+            |
+            <a class="nav-link active px-2" href="{% url 'register' %}">Sign Up</a>
             {% endif %}
           </div>
         <!--

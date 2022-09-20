@@ -33,7 +33,7 @@
             {% include 'cmsblog/comment_response.html' with form_id=c.form_target post_id=page.id thread_id=t.pk form_class="collapse" mode="comment" comment=c %}
           {% endfor %}
           <!-- reply to this thread -->
-          {% include 'cmsblog/comment_response.html' with form_id="new-comment-thread" post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+          {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
         </div>
       {% endif %}
     {% endfor %}
@@ -93,23 +93,5 @@
     delete_modal.querySelector('#thread_id').value = thread_id
   })
 
-  /*
-  $('#delete_modal').on('show.bs.modal', function (event) {
-    // this is the button that triggered the modal
-    // it contains the comment specifics that will
-    // be required to actually delete the comment
-    const button = $(event.relatedTarget) 
-    const comment_id = button.data('commentId')
-    const post_id = button.data('postId')
-    const thread_id = button.data('threadId')
-    console.log(button.data())
-
-    // assign the variables to the delete button on the dialog
-    $('#delete_confirm').off('click')
-    $('#delete_confirm').click(function() {
-        delete_comment(post_id, thread_id, comment_id)
-      })
-  })
-  */
 </script>
 {% endblock scripts %}
