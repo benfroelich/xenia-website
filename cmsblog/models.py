@@ -152,6 +152,10 @@ class Comment(models.Model):
     # default is 1
     edits = models.PositiveIntegerField('number of edits', default=0)
 
+    # we don't actually delete the comment, but rather flag it as 
+    # deleted and fill some generic text in the views
+    deleted = models.BooleanField(default=False)
+
     def __str__(self):
         return f'"{self.short_description}" - on thread {self.thread.__str__()}'
     @property
@@ -164,6 +168,10 @@ class Comment(models.Model):
     def save(self, *args, **kwargs):
         self.edits += 1
         super().save(*args, **kwargs)
+
+    @property
+    def get_text(self):
+        return "This comment has been deleted" if self.deleted else self.comment_text
 
     @property
     def text_target(self):

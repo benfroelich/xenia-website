@@ -36,8 +36,10 @@ def comment(request, thread_id, post_id):
                         thread_id = request.POST.get('thread_id', '').lower()
                         print(f'setting post_id to {post_id} and thread_id to {thread_id}')
                         comment.comment_text = "This comment has been deleted."
+                        comment.deleted = True
                     else: # handle edit
-                        comment.comment_text = request.POST['comment']
+                        if not comment.deleted:
+                            comment.comment_text = request.POST['comment']
 
                     comment.last_published_at = datetime.now()
                     comment.save()
