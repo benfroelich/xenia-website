@@ -1,19 +1,35 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% load wagtailcore_tags %}
 {% load wagtailuserbar %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block content %}
 {% wagtailuserbar %}
-<a href="{% pageurl page.get_parent %}" class="link-dark">Back to index</a>
 {% if page %}
 <div class="container">
   <div class="row">
     <div class="col-md-8 offset-md-2">
-    <h1>{{ page.title }}</h1>
-      {% if page.should_display_updated == True %}
-        <p>updated {{ page.last_published_at|date:"SHORT_DATE_FORMAT" }}</p>
-      {% endif %}
-        <p>published {{ page.first_published_at|date:"SHORT_DATE_FORMAT" }}</p>
+      <a href="{% pageurl page.get_parent %}" class="link-dark">Back to index page</a>
+      <h1>{{ page.title }}</h1>
+      <div class="row">
+          {% if page.should_display_updated %}
+          <div class="col-md-5">
+            <span class="text-muted"> Updated </span>{{ page.last_published_at|naturaltime }}
+          </div>
+          {% endif %}
+          <div class="col-md-5">
+            <span class="text-muted"> Published </span> {{ page.first_published_at|naturaltime }}
+          </div>
+      </div>
+      <div class="row">
+        <div class="col iconized">
+            <svg class="bi bi-person-circle" width="1em" height="1em" viewBox="0 0 1em 1em" fill="currentColor">
+              <use xlink:href="/static/bootstrap-icons.svg#person-circle"/>
+            </svg>
+            {{ page.owner.first_name }}
+            {{ page.owner.last_name }}
+        </div>
+      </div>
 {% include_block page.body %}
 {% else %}
       <p>No page dag yo</p>
@@ -55,7 +71,7 @@
         </div>
         <div class="modal-footer">
           <form action="{% url 'blog:comment' 0 0 %}" 
-            method="post" id="{{ form_id }}">
+            method="post">
             {% csrf_token %}
             <input type="hidden" id="comment_id" name="comment_id" value="unset">
             <input type="hidden" id="thread_id" name="thread_id" value="unset">
@@ -68,7 +84,7 @@
       </div>
     </div>
   </div>
-
+</div>
 </div>
 
 {% endblock content %}

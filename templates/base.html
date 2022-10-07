@@ -12,6 +12,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/271055586d.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <title>{% block title %}TODO - branding variables{% endblock %}</title>
 </head>
@@ -73,6 +75,24 @@
   <div id="sidebar">
     {% block sidebar %}
     {% endblock %}
+  </div>
+
+  <div class="container py-md-3" id="messages-section">
+    {% block message_section %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <strong class="me-auto">Notifications</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endblock message_section %}
   </div>
 
   <div class="container py-md-3" id="content">

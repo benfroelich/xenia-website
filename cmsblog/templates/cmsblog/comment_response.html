@@ -1,36 +1,54 @@
 <div class="container">
   {% if comment %}
-    <p id="{{ c.text_target }}"> 
-      <span class="{{c.text_target}}">
-        {{ comment.get_text }} 
-      </span>
-      - <span class="fw-bold"> {{ c.owner|default:"anonymous" }} </span>
-        <span class="text-muted"> 
-        {{ comment.last_published_at }} 
-        {% if comment.edited and not comment.deleted %} 
-          <!-- pencil edit icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-</svg>
+    <div class="row">
+      <div class="col-md-11">
+        <p id="{{ c.text_target }}"> 
+          <span class="{{c.text_target}}">
+            {{ comment.get_text|urlize }} 
+          </span>
+          <span class="nowrap"> 
+            - <span class="fw-bold"> {{ c.owner|default:"anonymous" }} </span>
+            <span class="text-muted"> 
+              {{ comment.last_published_at|timesince}} ago
+              {% if comment.edited and not comment.deleted %} 
+                <svg class="bi" width="1rem" height="1rem" fill="currentColor">
+                  <use xlink:href="/static/bootstrap-icons.svg#pencil-fill"/>
+                </svg>
+              {% endif %}
+            </span>
+          </span> 
+        </p>
+      </div>
+      <div class="col-md-1">
+        {% if user.is_authenticated and user == c.owner and not comment.deleted %}
+        <div class="row py-1">
+          <button class="centered-button btn btn-small btn-primary" data-bs-toggle="collapse" 
+              data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
+            <svg class="bi" width="1rem" height="1rem" fill="currentColor">
+              <use xlink:href="/static/bootstrap-icons.svg#pencil-square"/>
+            </svg>
+          </button>
+        </div>
+        <div class="row py-1">
+          <button data-thread-id="{{ thread_id}}" data-comment-id="{{ comment.pk }}" 
+               data-post-id="{{ post_id }}" data-bs-toggle="modal" data-bs-target="#delete_modal" 
+               class="centered-button btn btn-small btn-secondary">
+            <svg class="bi" width="1rem" height="1rem" fill="currentColor">
+              <use xlink:href="/static/bootstrap-icons.svg#trash3"/>
+            </svg>
+          </button>
+        </div>
         {% endif %}
-      </span> 
-      {% if user.is_authenticated and user == c.owner and not comment.deleted %}
-      <a class="" type="button" data-bs-toggle="collapse" 
-          data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
-        Edit
-      </a>
-      <a data-thread-id="{{ thread_id}}" data-comment-id="{{ comment.pk }}" 
-           data-post-id="{{ post_id }}" data-bs-toggle="modal" data-bs-target="#delete_modal" 
-           class="">
-        Delete
-      </a>
-      {% endif %}
-    </p>
+      </div>
+    </div>
     {% endif %}
-    {% if user.is_authenticated %}
-    {% if mode == 'reply' %}
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" 
+  {% if user.is_authenticated %}
+  {% if mode == 'reply' %}
+    <button class="centered-button btn btn-primary" type="button" data-bs-toggle="collapse" 
           data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
+      <svg class="bi" width="1rem" height="1rem" fill="currentColor">
+        <use xlink:href="/static/bootstrap-icons.svg#reply"/>
+      </svg>
       Reply
     </button>
     {% endif %}
@@ -38,15 +56,12 @@
           method="post" class="{{ form_class }}" id="{{ form_id }}">
       {% csrf_token %}
       <div class="mb-3">
-        {% if error_message %} {# comment form errors #}
-        <p><strong>{{ error_message }}</strong></p>
-        {% endif %}
         <label for="{{ form_id }}_text" class="form-label">Your comment</label>
         <textarea id="{{ form_id }}_text" class="form-control"
               name="comment" required minlength="4" 
-              maxlength=1000 rows=5>{{ comment.get_text }}</textarea>
+              maxlength=1000 rows=3>{{ comment.get_text }}</textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="centered-button btn btn-primary">Submit</button>
       {% if comment %}
         <input type="hidden" name="comment_id" value="{{ comment.pk }}">
       {% endif %}

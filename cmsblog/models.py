@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 import datetime
 
+from profanity_check import predict, predict_prob
+
 # wagtail-related
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -77,8 +79,8 @@ class BlogPost(Page):
             return False
         else:
             if comp == 'day':
-                # if day is different or any either month or year are different
-                return (self.first_published_at.day() != self.last_published_at.day()) or \
+                # if day is different or either month or year are different
+                return (self.first_published_at.day != self.last_published_at.day) or \
                        (self.first_published_at - self.last_published_at > datetime.timedelta(days=1))
             else: 
                 raise NotImplementedError(f'{comp} not implemented')
@@ -166,7 +168,11 @@ class Comment(models.Model):
         return self.edits > 1
 
     def save(self, *args, **kwargs):
-        self.edits += 1
+        if predict([self.comment_text]):
+            raise self.ProfanityError()
+        else:
+            self.edits += 1
+            self.comment_text = self.comment_text
         super().save(*args, **kwargs)
 
     @property
@@ -185,6 +191,9 @@ class Comment(models.Model):
     # so that it reads like a normal conversation
     class Meta:
         ordering = ['first_published_at']
+
+    class ProfanityError(Exception):
+        pass
 
 class BlogPageRelatedLink(Orderable):
     page = ParentalKey(BlogPost, on_delete=models.CASCADE, related_name='related_links')

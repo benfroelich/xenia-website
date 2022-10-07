@@ -3,21 +3,15 @@ from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.utils import timezone
 from datetime import datetime
+from django.contrib import messages
+
 
 from .models import BlogPost, Comment, Thread
 
-#def comment_delete(request, comment_id):
-#    if request.method == "DELETE":
-#        try:
-#            comment = Comment.objects.get(pk=comment_id)
-#            comment.delete()
-#        except (KeyError, Comment.DoesNotExist):
-#            return render(request, 'cmsblog/blog_index.html', {
-#                'error_message': 'Could not delete this comment'
-#            }) 
-#    page = get_object_or_404(BlogPost, pk=post_id)
-#    return HttpResponseRedirect(page.get_url())
+def clear_messages(request):
+    list(messages.get_messages(request))
 
+# create, update, and delete comments
 def comment(request, thread_id, post_id):
     # this api uses POST for updates and new comments
     if request.method == "POST":
@@ -34,12 +28,18 @@ def comment(request, thread_id, post_id):
                         # dummy pks
                         post_id = request.POST.get('post_id', '').lower()
                         thread_id = request.POST.get('thread_id', '').lower()
-                        print(f'setting post_id to {post_id} and thread_id to {thread_id}')
-                        comment.comment_text = "This comment has been deleted."
-                        comment.deleted = True
-                    else: # handle edit
+
                         if not comment.deleted:
-                            comment.comment_text = request.POST['comment']
+                            comment.deleted = True
+                            messages.success(request, "your comment has been deleted")
+                        else:
+                            messages.error(request, "this comment was already deleted")
+                    else: # handle edit
+                        if comment.deleted:
+                            messages.error(request, "you cannot edit a deleted comment")
+                        else:
+                            comment.comment_text = (request.POST['comment'])
+                            messages.success(request, "successfully updated your comment")
 
                     comment.last_published_at = datetime.now()
                     comment.save()
@@ -54,10 +54,17 @@ def comment(request, thread_id, post_id):
                 comment = Comment(comment_text = request.POST['comment'], 
                         owner = request.user, thread_id = thread.pk)
                 comment.save()
+                messages.success(request, "your comment has been posted")
         except (KeyError, BlogPost.DoesNotExist, Thread.DoesNotExist, Comment.DoesNotExist):
-            return render(request, 'cmsblog/blog_index.html', {
-                'error_message': 'Somehow you tried to post a comment on a blog post thread which doesn\'t exist'
-            }) 
+            clear_messages(request)
+            messages.error(request, 
+                    "the post {post.pk}, thread {thread.pk}, or comment {comment.pk} does not exist")
+            return render(request, 'cmsblog/blog_index.html') 
+        except Comment.ProfanityError as err:
+            clear_messages(request)
+            messages.error(request, "your comment was rejected due to profanity")
+            # TODO: log or notify any profanity
     page = get_object_or_404(BlogPost, pk=post_id)
     return HttpResponseRedirect(page.get_url())
+
 

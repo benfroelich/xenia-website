@@ -2,13 +2,14 @@
 @import "../../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$brand-primary:     #DAE5D0;
-$brand-secondary:   #FEFBE7;
+$brand-primary:     #A0BCC2; 
+$brand-secondary:   #98b07f;
 $brand-tertiary:    #F9EBC8;
-$brand-quaternary:  #A0BCC2;
+$brand-quaternary:  #cae0b4;
 $brand-font:        'Jura', sans-serif;
+$font-weight-normal: 500;
 
-//$btn-border-radius:           $border-radius !default;
+$btn-border-radius:           20px;
 //$body-bg: black;
 //$btn-bg: $brand-primary;
 //$bs-btn-bg: black;
@@ -108,5 +109,20 @@ ul.no-bullets {
   margin: 0; /* Remove margins */
 }
 
-// TODO: use gulp and icon fonts
-// TODO: @import "../../node_modules/bootstrap-icons/font/bootstrap-icons";
+.nowrap {
+  white-space: nowrap ;
+}
+
+.centered-button {
+  display: flex !important; // bootstrap override, I know this is not a good idea
+  justify-content: center;
+  align-items: center;
+}
+
+// used for a paragraph of text that has icons interspersed within
+div.iconized {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
