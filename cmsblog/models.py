@@ -158,6 +158,11 @@ class Comment(models.Model):
     # deleted and fill some generic text in the views
     deleted = models.BooleanField(default=False)
 
+    # every time a comment gets flagged, this should be incremented
+    flagged_count = models.PositiveIntegerField(
+            'number of times this comment has been flagged', 
+            default=0)
+
     def __str__(self):
         return f'"{self.short_description}" - on thread {self.thread.__str__()}'
     @property

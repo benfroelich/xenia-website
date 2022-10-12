@@ -103,4 +103,13 @@ class CommentBlogPostTests(TestCase):
         self.assertEqual(len(Thread.objects.all()), 0)
         self.assertEqual(len(Comment.objects.all()), 0)
 
+    def test_comment_flagging(self):
+        thread, redir = create_post_and_thread(self, 'first comment')
+        c = Comment.objects.get(thread_id = thread.pk)
+        self.assertEqual(c.flagged_count, 0)
+        resp = self.client.post(reverse('blog:comment-flag', args=(c.thread.post.pk,)), {'comment_id': c.pk})
+        c.refresh_from_db()
+        self.assertEqual(c.flagged_count, 1)
+        self.assertEqual(resp.status_code, 302)
+
     
