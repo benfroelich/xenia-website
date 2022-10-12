@@ -4,6 +4,9 @@ from django.views import generic
 from django.utils import timezone
 from datetime import datetime
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
 
 
 from .models import BlogPost, Comment, Thread
@@ -70,6 +73,13 @@ def comment(request, thread_id, post_id):
     page = get_object_or_404(BlogPost, pk=post_id)
     return HttpResponseRedirect(page.get_url())
 
+def notify_admins(comment, request):
+    send_mail(
+            subject=f'[{get_current_site(request).name}] - Comment Flagged',
+            message=f'{request.user} flagged the following comment by {comment.owner} \'{comment.comment_text}\'',
+            recipient_list=settings.ADMINS,
+            from_email=None
+        )
 
 # flag a comment: this marks it as flagged in the database
 # and sends details to admins
@@ -82,6 +92,7 @@ def flag_comment(request, post_id):
                 comment.flagged_count += 1
                 comment.save()
                 messages.success(request, "comment flagged for review, thanks for notifying us")
+                notify_admins(comment, request)
             else:
                 message.error(request, "must pass comment_id, please contact administration")
         except (KeyError, BlogPost.DoesNotExist, Comment.DoesNotExist):
