@@ -23,8 +23,8 @@
       </div>
       <div class="row">
         <div class="col iconized">
-            <svg class="bi bi-person-circle" width="1em" height="1em" viewBox="0 0 1em 1em" fill="currentColor">
-              <use xlink:href="/static/bootstrap-icons.svg#person-circle"/>
+            <svg class="bi bi-person" width="1em" height="1em" viewBox="0 0 1em 1em" fill="currentColor">
+              <use xlink:href="/static/bootstrap-icons.svg#person"/>
             </svg>
             {{ page.owner.first_name }}
             {{ page.owner.last_name }}
@@ -109,5 +109,7 @@
     delete_modal.querySelector('#thread_id').value = thread_id
   })
 
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+  const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 </script>
 {% endblock scripts %}

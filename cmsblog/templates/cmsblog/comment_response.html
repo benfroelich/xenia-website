@@ -7,7 +7,10 @@
             {{ comment.get_text|urlize }} 
           </span>
           <span class="nowrap"> 
-            - <span class="fw-bold"> {{ c.owner|default:"anonymous" }} </span>
+            - <a tabindex="0" class="popover-dismiss fw-bold" role="button" data-bs-toggle="popover" 
+              data-bs-title="User Info" 
+              data-bs-content="{{ c.owner.first_name|default:"anonymous" }} {{ c.owner.last_name }}">
+              {{ c.owner|default:"anonymous" }}</a>
             <span class="text-muted"> 
               {{ comment.last_published_at|timesince}} ago
               {% if comment.edited and not comment.deleted %} 
