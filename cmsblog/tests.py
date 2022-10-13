@@ -5,6 +5,7 @@ import datetime
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core import mail
 
 from wagtail.test.utils.form_data import nested_form_data, streamfield
 from wagtail.test.utils import WagtailPageTests
@@ -103,6 +104,11 @@ class CommentBlogPostTests(TestCase):
         self.assertEqual(len(Thread.objects.all()), 0)
         self.assertEqual(len(Comment.objects.all()), 0)
 
+class CommentFlaggingTests(TestCase):
+    def setUp(self):
+        super(type(self), self).setUp()
+        self.client = ValidatingClient()
+
     def test_comment_flagging(self):
         thread, redir = create_post_and_thread(self, 'first comment')
         c = Comment.objects.get(thread_id = thread.pk)
@@ -112,4 +118,12 @@ class CommentBlogPostTests(TestCase):
         self.assertEqual(c.flagged_count, 1)
         self.assertEqual(resp.status_code, 302)
 
+    def test_comment_flagging_notification(self):
+        thread, redir = create_post_and_thread(self, 'first comment')
+        c = Comment.objects.get(thread_id = thread.pk)
+        self.assertEqual(c.flagged_count, 0)
+        resp = self.client.post(reverse('blog:comment-flag', args=(c.thread.post.pk,)), {'comment_id': c.pk})
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(c.owner.username, mail.outbox[0].body)
+        self.assertIn(resp.wsgi_request.user.username, mail.outbox[0].body)
     
