@@ -10960,4 +10960,8 @@ div.iconized {
   align-items: center;
 }
 
+#messages-section {
+  position: fixed;
+}
+
 /*# sourceMappingURL=brand.css.map */

@@ -7,5 +7,5 @@ urlpatterns = [
     #path('', views.IndexView.as_view(), name='index'),
     #path('<int:pk>/', views.PostView.as_view(), name='post'),
     path('<int:post_id>/comment/<thread_id>', views.comment, name='comment'),
-    path('<int:post_id>/comment_flag', views.flag_comment, name='comment-flag'),
+    path('/comment_flag', views.flag_comment, name='comment-flag'),
 ]

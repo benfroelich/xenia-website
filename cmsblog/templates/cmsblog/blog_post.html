@@ -49,7 +49,9 @@
             {% include 'cmsblog/comment_response.html' with form_id=c.form_target post_id=page.id thread_id=t.pk form_class="collapse" mode="comment" comment=c %}
           {% endfor %}
           <!-- reply to this thread -->
-          {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+          {% if not t.all_deleted %}
+            {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+          {% endif %}
         </div>
       {% endif %}
     {% endfor %}
@@ -57,6 +59,53 @@
 </div>
   </div>
 
+  <!-- modal saying you must log in or register -->
+  <div class="modal fade" id="unauth_modal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Log in or Register</h5>
+          <button type="button" class="btn-close" 
+            data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Please log in or register to access this feature</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- modal for deletion confirmation -->
+
+  <!-- modal for comment flagging confirmation -->
+  <div class="modal fade" id="flag_modal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Comment Flagging</h5>
+          <button type="button" class="btn-close" 
+            data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to flag this comment as inappropriate?</p>
+        </div>
+        <div class="modal-footer">
+          <form action="{% url 'blog:comment-flag' %}" 
+            method="post">
+            {% csrf_token %}
+            <input type="hidden" class="comment_id" name="comment_id" value="unset">
+            <input type="hidden" class="thread_id" name="thread_id" value="unset">
+            <input type="hidden" class="post_id" name="post_id" value="unset">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" id="delete_confirm" class="btn btn-primary">Flag</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- modal for deletion confirmation -->
   <div class="modal fade" id="delete_modal" tabindex="-1">
     <div class="modal-dialog" role="document">
@@ -73,9 +122,9 @@
           <form action="{% url 'blog:comment' 0 0 %}" 
             method="post">
             {% csrf_token %}
-            <input type="hidden" id="comment_id" name="comment_id" value="unset">
-            <input type="hidden" id="thread_id" name="thread_id" value="unset">
-            <input type="hidden" id="post_id" name="post_id" value="unset">
+            <input type="hidden" class="comment_id" name="comment_id" value="unset">
+            <input type="hidden" class="thread_id" name="thread_id" value="unset">
+            <input type="hidden" class="post_id" name="post_id" value="unset">
             <input type="hidden" name="_method" value="delete">
             <button type="submit" id="delete_confirm" class="btn btn-primary">Delete</button>
           </form>
@@ -92,21 +141,24 @@
 {% block scripts %}
 <script>
 
-  const delete_modal = document.getElementById('delete_modal')
-  delete_modal.addEventListener('show.bs.modal', event => {
-    // Button that triggered the modal
-    const button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    const recipient = button.getAttribute('data-bs-whatever')
-    const modal_ = delete_modal.querySelector('.modal-body input')
-
+  function set_form_fields(button, modal) {
     // add specific info to the delete form in the modal
     const comment_id = button.getAttribute('data-comment-id')
     const post_id = button.getAttribute('data-post-id')
     const thread_id = button.getAttribute('data-thread-id')
-    delete_modal.querySelector('#comment_id').value = comment_id
-    delete_modal.querySelector('#post_id').value = post_id
-    delete_modal.querySelector('#thread_id').value = thread_id
+    modal.querySelector('.comment_id').value = comment_id
+    modal.querySelector('.post_id').value = post_id
+    modal.querySelector('.thread_id').value = thread_id
+  }
+
+  const flag_modal = document.getElementById('flag_modal')
+  flag_modal.addEventListener('show.bs.modal', event => {
+      set_form_fields(event.relatedTarget, flag_modal)
+  })
+
+  const delete_modal = document.getElementById('delete_modal')
+  delete_modal.addEventListener('show.bs.modal', event => {
+    set_form_fields(event.relatedTarget, delete_modal)
   })
 
   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')

@@ -132,6 +132,9 @@ class BlogIndex(Page):
 # a group of comments will be listed in a thread
 class Thread(models.Model):
     post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    def all_deleted(self):
+        return not len(self.comment_set.filter(deleted=False)) > 0
+
     def __str__(self):
         return f'Comment Thread on {self.post.__str__()}'
 

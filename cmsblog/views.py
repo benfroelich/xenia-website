@@ -83,18 +83,20 @@ def notify_admins(comment, request):
 
 # flag a comment: this marks it as flagged in the database
 # and sends details to admins
-def flag_comment(request, post_id):
+def flag_comment(request):
     # this is the only method used
+    post_id = None
     if request.method == "POST" and request.user.is_authenticated:
         try:
-            if 'comment_id' in request.POST:
+            if 'comment_id' in request.POST and 'post_id' in request.POST:
+                post_id = request.POST['post_id']
                 comment = Comment.objects.get(pk=request.POST['comment_id'])
                 comment.flagged_count += 1
                 comment.save()
                 messages.success(request, "comment flagged for review, thanks for notifying us")
                 notify_admins(comment, request)
             else:
-                message.error(request, "must pass comment_id, please contact administration")
+                message.error(request, "must pass comment_id and post_id, please contact administration")
         except (KeyError, BlogPost.DoesNotExist, Comment.DoesNotExist):
             clear_messages(request)
             messages.error(request, 
