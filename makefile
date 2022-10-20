@@ -1,4 +1,4 @@
-.PHONY: coverage test prereq
+.PHONY: coverage test prereq deploycheck
 
 manage = manage.py
 python = python
@@ -13,3 +13,5 @@ coverage: prereq
 	coverage run --source='.' $(manage) test $(apps)
 	coverage report
 
+deploycheck: prereq
+	source prod.sh && $(python) $(manage) check --deploy

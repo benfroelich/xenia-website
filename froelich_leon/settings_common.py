@@ -7,6 +7,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ADMINS = [('benny', 'benfroelich@gmail.com')]
+MANAGERS = [('benny', 'benfroelich@gmail.com')]
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -16,6 +17,7 @@ with open('.secret_key') as f:
     SECRET_KEY = f.read().strip()
 
 WAGTAIL_FRONTEND_LOGIN_TEMPLATE = 'registration/login.html'
+WAGTAILADMIN_BASE_URL = 'www.terravenustalandscapes.com/cms/'
 
 # currently this is for terravenustalandscapes.com
 SITE_ID = 2
@@ -141,12 +143,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = "/var/www/example.com/static/"
-
+STATIC_ROOT = "/var/www/terravenusta/static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "node_modules/bootstrap-icons"
+    BASE_DIR / "node_modules/bootstrap-icons",
+    BASE_DIR / "node_modules/bootstrap",
+    BASE_DIR / "node_modules/jquery",
 ]
 
 import os
@@ -159,3 +162,8 @@ WAGTAIL_SITE_NAME = 'Terra Venusta'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CONN_MAX_AGE = None # don't timeout connections
+# https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-CONN_HEALTH_CHECKS
+CONN_HEALTH_CHECK = True
+
