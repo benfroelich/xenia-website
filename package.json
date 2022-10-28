@@ -1,7 +1,14 @@
 {
+  "name": "terravenusta",
+  "private": true,
   "dependencies": {
     "bootstrap": "^5.2.0",
     "bootstrap-icons": "^1.9.1",
     "jquery": "^3.6.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.74.0",
+    "webpack-bundle-tracker": "^1.6.0",
+    "webpack-cli": "^4.10.0"
   }
 }

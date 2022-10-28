@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
@@ -63,6 +64,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -142,15 +144,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = "/var/www/terravenusta/static/"
+STATIC_ROOT = BASE_DIR / "static-collection"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "node_modules/bootstrap-icons",
-    BASE_DIR / "node_modules/bootstrap",
-    BASE_DIR / "node_modules/jquery",
+    BASE_DIR / "node_modules",
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -166,4 +167,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CONN_MAX_AGE = None # don't timeout connections
 # https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-CONN_HEALTH_CHECKS
 CONN_HEALTH_CHECK = True
+
 
