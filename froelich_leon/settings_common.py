@@ -2,6 +2,7 @@
 common django settings for the terra venusta project.
 """
 
+import os
 from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,8 +14,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open('.secret_key') as f:
-    SECRET_KEY = f.read().strip()
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 WAGTAIL_FRONTEND_LOGIN_TEMPLATE = 'registration/login.html'
 WAGTAILADMIN_BASE_URL = 'www.terravenustalandscapes.com/cms/'
@@ -104,7 +104,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'OPTIONS': {
             'service': 'db_service',
-            'passfile': '.my_pgpass',
+            'passfile': os.environ.get("DJANGO_PG_PASS"),
         },
     }
 }

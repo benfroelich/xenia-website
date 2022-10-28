@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from .settings_common import *
 
+IS_HEROKU = "DYNO" in os.environ
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['terravenustalandscapes.com']
+if IS_HEROKU:
+    ALLOWED_HOSTS += '.herokuapp.com'
 
 SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
