@@ -4,3 +4,4 @@ django_html_validator==0.5.1
 django_modelcluster==6.0
 profanity_check==1.0.3
 wagtail==4.0.4
+gunicorn
