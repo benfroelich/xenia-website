@@ -1,0 +1,13 @@
+{
+  "name": "terra-venusta",
+  "description": "Xenia's landscape design site",
+  "scripts": {
+    "postinstall": "cd static && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benfroelich/xenia-website"
+  },
+  "author": "benny",
+  "license": "ISC"
+}
