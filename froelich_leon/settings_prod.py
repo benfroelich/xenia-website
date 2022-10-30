@@ -18,7 +18,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['terravenustalandscapes.com']
 if IS_HEROKU:
-    ALLOWED_HOSTS += '.herokuapp.com'
+    ALLOWED_HOSTS += '*'
+    #ALLOWED_HOSTS += '.herokuapp.com'
 
 SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
