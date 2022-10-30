@@ -1,2 +1,2 @@
-release: python manage.py migrate && npm install
-web: gunicorn froelich_leon.wsgi
+release: python manage.py migrate
+web: npm install && gunicorn froelich_leon.wsgi
