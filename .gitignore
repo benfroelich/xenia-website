@@ -6,3 +6,5 @@ __pycache__
 .secret_key
 node_modules
 media
+static-collection
+static/node_modules
