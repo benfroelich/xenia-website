@@ -163,7 +163,6 @@ STATIC_ROOT = BASE_DIR / "static-collection"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "node_modules",
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
