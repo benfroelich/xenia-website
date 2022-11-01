@@ -167,10 +167,6 @@ STATICFILES_DIRS = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-import os
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 WAGTAIL_SITE_NAME = 'Terra Venusta'
 
 # Default primary key field type

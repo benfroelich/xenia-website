@@ -31,3 +31,8 @@ HTMLVALIDATOR_VNU_JAR = '~/Downloads/vnu.jar'
 if HTMLVALIDATOR_ENABLED:
     MIDDLEWARE += ("htmlvalidator.middleware.HTMLValidator",)
 
+# just serve user-uploaded files locally
+import os
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
