@@ -8,3 +8,5 @@ node_modules
 media
 static-collection
 static/node_modules
+.s3_access_key
+.s3_secret_access_key

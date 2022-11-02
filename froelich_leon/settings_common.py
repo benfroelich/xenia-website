@@ -178,4 +178,5 @@ CONN_MAX_AGE = None # don't timeout connections
 # https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-CONN_HEALTH_CHECKS
 CONN_HEALTH_CHECK = True
 
+AWS_STORAGE_BUCKET_NAME = "terra-venusta"
 
