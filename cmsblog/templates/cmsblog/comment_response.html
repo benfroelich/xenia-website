@@ -1,3 +1,4 @@
+{% load static %}
 <div class="container">
   {% if comment %}
     <div class="row">
@@ -15,7 +16,7 @@
               {{ comment.last_published_at|timesince}} ago
               {% if comment.edited and not comment.deleted %} 
                 <svg class="bi" width="1rem" height="1rem" fill="currentColor">
-                  <use xlink:href="/static/bootstrap-icons.svg#pencil-fill"/>
+                  <use xlink:href="{% static 'node_modules/bootstrap-icons/bootstrap-icons.svg#pencil-fill' %}"/>
                 </svg>
               {% endif %}
             </span>
@@ -28,7 +29,7 @@
           <button class="centered-button btn btn-small btn-primary" data-bs-toggle="collapse" 
               data-bs-target="#{{ form_id }}" aria-expanded="false" aria-controls="{{ form_id }}">
             <svg class="bi" width="1rem" height="1rem" fill="currentColor">
-              <use xlink:href="/static/bootstrap-icons.svg#pencil-square"/>
+              <use xlink:href="{% static 'node_modules/bootstrap-icons/bootstrap-icons.svg#pencil-square' %}"/>
             </svg>
           </button>
         </div>
@@ -38,7 +39,7 @@
                data-post-id="{{ post_id }}" data-bs-toggle="modal" data-bs-target="#delete_modal" 
                class="centered-button btn btn-small btn-secondary">
             <svg class="bi" width="1rem" height="1rem" fill="currentColor">
-              <use xlink:href="/static/bootstrap-icons.svg#trash3"/>
+              <use xlink:href="{% static 'node_modules/bootstrap-icons/bootstrap-icons.svg#trash3' %}"/>
             </svg>
           </button>
         </div>
@@ -55,7 +56,7 @@
                     {% endif %}
                      >
                   <svg class="bi" width="1rem" height="1rem" fill="currentColor">
-                    <use xlink:href="/static/bootstrap-icons.svg#flag"/>
+                    <use xlink:href="{% static 'node_modules/bootstrap-icons/bootstrap-icons.svg#flag' %}"/>
                   </svg>
                 </button>
               </div>
