@@ -33,7 +33,7 @@ if HTMLVALIDATOR_ENABLED:
 
 USE_S3 = True
 if USE_S3:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    from .aws_settings import *
 else:
     # just serve user-uploaded files locally
     import os

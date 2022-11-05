@@ -10964,4 +10964,10 @@ div.iconized {
   position: fixed;
 }
 
+.post-content-image {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+}
+
 /*# sourceMappingURL=brand.css.map */

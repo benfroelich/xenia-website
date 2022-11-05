@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load wagtailcore_tags %}
 {% load wagtailuserbar %}
+{% load wagtailimages_tags %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block content %}
 {% wagtailuserbar %}
@@ -31,7 +32,15 @@
             {{ page.owner.last_name }}
         </div>
       </div>
-{% include_block page.body %}
+    {% for block in page.body %}
+        <section class="block-{{ block.block_type }}">
+          {% if block.block_type == 'image' %}
+            {% image block.value max-1000x500 class="post-content-image" %}
+          {% else %}
+            {% include_block block %}
+        {% endif %}
+    {% endfor %}
+
 {% else %}
       <p>No page dag yo</p>
 {% endif %}
