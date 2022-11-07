@@ -4,6 +4,7 @@ __pycache__
 .my_pgpass
 .coverage
 .secret_key
+.env
 node_modules
 media
 static-collection
