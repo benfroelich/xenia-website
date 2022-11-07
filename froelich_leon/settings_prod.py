@@ -34,9 +34,9 @@ EMAIL_HOST_USER = os.environ['MAILGUN_SMTP_LOGIN']
 EMAIL_HOST_PASSWORD = os.environ['MAILGUN_SMTP_PASSWORD']
 EMAIL_USE_TLS = True
 
-if DEFAULT_FROM_EMAIL in os.environ:
+if 'DEFAULT_FROM_EMAIL' in os.environ:
     DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 
-if SERVER_EMAIL in os.environ:
+if 'SERVER_EMAIL' in os.environ:
     SERVER_EMAIL = os.environ['SERVER_EMAIL']
 
