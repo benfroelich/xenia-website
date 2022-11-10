@@ -180,3 +180,6 @@ CONN_HEALTH_CHECK = True
 
 AWS_STORAGE_BUCKET_NAME = "terra-venusta"
 
+# to support wagtail inline preview
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
