@@ -183,3 +183,10 @@ AWS_STORAGE_BUCKET_NAME = "terra-venusta"
 # to support wagtail inline preview
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+AWS_ACCESS_KEY_ID = os.environ['AWS_S3_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_S3_SECRET_ACCESS_KEY']
+AWS_SES_CONFIGURATION_SET = 'tv'
+AWS_SES_RETURN_PATH = os.environ['AWS_SES_RETURN_PATH']
+
