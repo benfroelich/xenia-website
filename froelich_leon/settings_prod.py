@@ -28,10 +28,6 @@ SECURE_SSL_REDIRECT = True
 
 from .aws_settings import *
 
-EMAIL_PORT = os.environ['MAILGUN_SMTP_PORT']
-EMAIL_HOST = os.environ['MAILGUN_SMTP_SERVER']
-EMAIL_HOST_USER = os.environ['MAILGUN_SMTP_LOGIN']
-EMAIL_HOST_PASSWORD = os.environ['MAILGUN_SMTP_PASSWORD']
 EMAIL_USE_TLS = True
 
 if 'DEFAULT_FROM_EMAIL' in os.environ:
