@@ -73,7 +73,10 @@ class BlogPost(Page):
         return not is_future and self.last_published_at >= threshold 
     
     def should_display_updated(self, comp = 'day'):
-        is_future = self.first_published_at > timezone.now() or self.last_published_at > timezone.now()
+        if self.first_published_at is None or self.last_published_at is None:
+            return False
+        is_future = self.first_published_at > timezone.now() or \
+            self.last_published_at > timezone.now()
         # if either date is in the future, this is not something we want users to see
         if is_future:
             return False

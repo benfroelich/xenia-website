@@ -21,6 +21,27 @@ class BlogPostModelTests(WagtailPageTests):
     def test_hierarchy(self):
         self.assertCanCreateAt(BlogIndex, BlogPost)
 
+    def test_should_display_updated_normal(self):
+        (uname, pw, post) = create_post(days_offset=-1)
+        post.last_published_at = timezone.now()
+        self.assertEquals(post.should_display_updated(), True)
+
+    def test_should_display_updated_draft(self):
+        (uname, pw, post) = create_post()
+        post.first_published_at = None
+        post.last_published_at = None
+        self.assertEquals(post.should_display_updated(), False)
+
+    def test_should_display_updated_future(self):
+        (uname, pw, post) = create_post(days_offset=1)
+        post.last_published_at = timezone.now()
+        self.assertEquals(post.should_display_updated(), False)
+
+    def test_should_display_updated_past(self):
+        (uname, pw, post) = create_post(days_offset=-1)
+        # first/last updated are equal
+        self.assertEquals(post.should_display_updated(), False)
+
 class CommentModelTests(TestCase):
     def test_creation(self):
         pass
@@ -113,7 +134,8 @@ class CommentFlaggingTests(TestCase):
         thread, redir = create_post_and_thread(self, 'first comment')
         c = Comment.objects.get(thread_id = thread.pk)
         self.assertEqual(c.flagged_count, 0)
-        resp = self.client.post(reverse('blog:comment-flag', args=(c.thread.post.pk,)), {'comment_id': c.pk})
+        resp = self.client.post(reverse('blog:comment-flag'),
+            {'comment_id': c.pk, 'post_id': c.thread.post.pk})
         c.refresh_from_db()
         self.assertEqual(c.flagged_count, 1)
         self.assertEqual(resp.status_code, 302)
@@ -122,7 +144,8 @@ class CommentFlaggingTests(TestCase):
         thread, redir = create_post_and_thread(self, 'first comment')
         c = Comment.objects.get(thread_id = thread.pk)
         self.assertEqual(c.flagged_count, 0)
-        resp = self.client.post(reverse('blog:comment-flag', args=(c.thread.post.pk,)), {'comment_id': c.pk})
+        resp = self.client.post(reverse('blog:comment-flag'),
+            {'comment_id': c.pk, 'post_id': c.thread.post.pk})
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(c.owner.username, mail.outbox[0].body)
         self.assertIn(resp.wsgi_request.user.username, mail.outbox[0].body)
