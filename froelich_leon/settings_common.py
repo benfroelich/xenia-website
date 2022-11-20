@@ -21,7 +21,7 @@ CSRF_COOKIE_SECURE = True
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 WAGTAIL_FRONTEND_LOGIN_TEMPLATE = 'registration/login.html'
-WAGTAILADMIN_BASE_URL = 'www.terravenustalandscapes.com/cms/'
+WAGTAILADMIN_BASE_URL = 'www.terravenustalandscapes.com'
 
 # currently this is for terravenustalandscapes.com
 SITE_ID = 2
