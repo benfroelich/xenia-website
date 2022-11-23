@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<!-- welcome banner -->  
+{% load wagtailcore_tags wagtailimages_tags %}
+<div class="header container-fluid">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      {% image page.hero_background max-400x400 %}
+      <h1>{{ page.hero }}</h1>
+      <p>{{ page.body }}</p>
+    </div>
+  </div>
+</div>
+<!-- blurb about us and what we do -->  
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h3>Projects</h3>
+      <h3>About</h3>
+      <p>Terra Venusta is Latin for "beatiful earth."</p>
+    </div>
+  </div>
+</div>
+<!-- link to quote page -->  
+<!-- services -->  
+<!-- blog -->  
+{% endblock %}
+
