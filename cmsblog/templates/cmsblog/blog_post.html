@@ -44,13 +44,17 @@
 {% else %}
       <p>No page dag yo</p>
 {% endif %}
+
   <h2>Comments</h2>
+  
   <div class="container border-top py-3">
-  {% if not user.is_authenticated %}
-  <a href="{% url 'register' %}" class="link-dark">Register</a> or <a href="{% url 'login' %}" class="link-dark">Log in</a> to comment
-  {% endif %}
+    {% if not user.is_authenticated %}
+      <a href="{% url 'register' %}" class="link-dark">Register</a> or <a href="{% url 'login' %}" class="link-dark">Log in</a> to comment
+    {% endif %}
+
     <!-- create a new comment thread -->
-    {% include 'cmsblog/comment_response.html' with form_id="new_comment" post_id=page.id thread_id="new" form_class="collapse show" mode="comment" %}
+    {% include 'cmsblog/comment_response.html' with form_id="new_comment" post_id=page.id thread_id="new" form_class="collapse show" mode="comment" comment=None %}
+
     {% for t in page.thread_set.all %}
       {% if t.comment_set.count > 0 %}
         <div class="my-3 p-3 border-start">
@@ -60,7 +64,7 @@
           {% endfor %}
           <!-- reply to this thread -->
           {% if not t.all_deleted %}
-            {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" %}
+            {% include 'cmsblog/comment_response.html' with form_id=t.chain_id post_id=page.id thread_id=t.pk form_class="collapse" mode="reply" comment=None %}
           {% endif %}
         </div>
       {% endif %}

@@ -36,11 +36,12 @@ urlpatterns = [
 
     path('cms/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    path('', include(wagtail_urls)),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('registration.urls')),
     path('profile/', include('user_profile.urls')),
+
+    path('', include(wagtail_urls)),
 
     re_path(r'^(?P<url>.*/)$', views.flatpage),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

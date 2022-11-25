@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
+{% load humanize %}
 
 {#{% block body_class %}template-blogindexpage{% endblock %}#}
 
 {% block content %}
     <h1>{{ page.title }}</h1>
 
-    <div class="intro">{{ page.intro|richtext }}</div>
+    <div class="intro">{{ page.introduction|richtext }}</div>
 
     {% if not active_posts %}
     <h1>Nothing is posted</h1>
@@ -17,7 +18,7 @@
             <div class="card-body">
               <h5 class="card-title">{{ post.title }}</h5>
               <p class="card-text">{{ post.intro }}</p>
-              <p class="card-text">{{ post.edit_date|date:"SHORT_DATE_FORMAT" }}</p>
+              <p class="card-text">{{ post.last_published_at|naturaltime }}</p>
               <a href="{% pageurl post %}" class="btn btn-primary">
                 View Post
               </a>

@@ -36,5 +36,5 @@ class MissingVariableErrorFilter(logging.Filter):
             if not template_name.startswith(self.ignored_prefixes):
                 raise MissingVariableError(
                     f"{variable_name!r} missing in {template_name!r}"
-                ) from None
+                ) from None # suppress context and cause
         return False
