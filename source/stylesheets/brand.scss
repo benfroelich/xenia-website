@@ -6,6 +6,8 @@ $brand-primary:     #A0BCC2;
 $brand-secondary:   #98b07f;
 $brand-tertiary:    #F9EBC8;
 $brand-quaternary:  #cae0b4;
+$hero-color-1:      $brand-primary;
+$hero-color-2:      #819ba1;
 $brand-font:        'Jura', sans-serif;
 $font-weight-normal: 500;
 
@@ -131,9 +133,22 @@ div.iconized {
 }
 
 // images in wagtail streamfields must be limited to fit within the div they are in
-.post-content-image {
+.squish-image, .post-content-image {
   max-width: 100%;
   max-height: 100%;
   height: auto;
 }
 
+div.hero {
+  background: linear-gradient(90deg, $hero-color-1 0%, $hero-color-2 50%) !important;
+  //background: $brand-primary;
+  border-radius: 1rem;
+  //border: thin solid $brand-primary;
+  //padding-top: 3rem;
+  //padding-bottom: 3rem;
+}
+h1.hero {
+  font-weight: 200;
+  font-family: system-ui;
+  color: white;
+}

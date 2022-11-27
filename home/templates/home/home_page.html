@@ -4,10 +4,12 @@
 <!-- welcome banner -->  
 {% load wagtailcore_tags wagtailimages_tags %}
 <div class="header container-fluid">
+  <div class="row my-md-5 hero">
+    <h1 class="text-center display-3 hero">{{ page.hero }}</h1>
+  </div>
   <div class="row">
+  {% image page.hero_background original class="squish-image" %}
     <div class="col-md-8 offset-md-2">
-      {% image page.hero_background max-400x400 %}
-      <h1>{{ page.hero }}</h1>
       <p>{{ page.body }}</p>
     </div>
   </div>
@@ -16,9 +18,15 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8 offset-md-2">
-      <h3>Projects</h3>
-      <h3>About</h3>
-      <p>Terra Venusta is Latin for "beatiful earth."</p>
+      <h3>Get started</h3>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">Blog</h5>
+        <p class="card-text">{{ page.blog_intro }}</p>
+        <a href="{% slugurl 'blog' %}" class="btn btn-primary">Blog</a>
+  </div>
+</div>
+
     </div>
   </div>
 </div>

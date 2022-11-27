@@ -10964,10 +10964,21 @@ div.iconized {
   position: fixed;
 }
 
-.post-content-image {
+.squish-image, .post-content-image {
   max-width: 100%;
   max-height: 100%;
   height: auto;
+}
+
+div.hero {
+  background: linear-gradient(90deg, #A0BCC2 0%, #819ba1 50%) !important;
+  border-radius: 1rem;
+}
+
+h1.hero, .hero.h1 {
+  font-weight: 200;
+  font-family: system-ui;
+  color: white;
 }
 
 /*# sourceMappingURL=brand.css.map */

@@ -51,6 +51,9 @@ class HomePage(Page):
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
     ]
 
+    def blog_intro(self):
+        return "GET THE BLOG INTRO TODO"
+
     # Parent page / subpage type rules
     #parent_page_types = []
     #subpage_types = []
