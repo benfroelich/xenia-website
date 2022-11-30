@@ -15,7 +15,7 @@
   <!-- fontawesome -->
   <script src="https://kit.fontawesome.com/271055586d.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <title>{% block title %}TODO - branding variables{% endblock %}</title>
+  <title>{% block title %}{% endblock %}</title>
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
 </head>
 
@@ -103,33 +103,14 @@
 
   {% block footer %}
     <div class="container-fluid" id="footer">
+
       <div class="row p-md-4">
         <div class="col-md-4 offset-md-1">
-          <p>Terra Venusta is a woman-owned landscaping and permaculture landscape design group</p>
+          <p>Terra Venusta is a woman-owned landscaping and permaculture design group</p>
           <p>&copy; 2022 Terra Venusta</p>
         </div>
-        <div class="col-md-2">
-          <h4>About</h4>
-          <ul class="no-bullets">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Privacy</a></li>
-          </ul>
-        </div>
-        <div class="col-md-2">
-          <h4>What We Do</h4>
-          <ul class="no-bullets">
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Blog</a></li>
-          </ul>
-        </div>
-        <div class="col-md-2">
-          <h4>Get Started</h4>
-          <ul class="no-bullets">
-            <li><a href="#">more links</a></li>
-            <li><a href="#">more links</a></li>
-          </ul>
-        </div>
+        {% load menu_tags %}
+        {% main_menu max_levels=2 %}
       </div>
     </div>
     {% endblock %}

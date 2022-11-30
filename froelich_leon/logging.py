@@ -28,6 +28,8 @@ class MissingVariableErrorFilter(logging.Filter):
         "wagtailimages/",
         "wagtailsites/",
         "wagtailusers/",
+        "wagtailmenus/",
+        "modeladmin/",
     )
 
     def filter(self, record):
