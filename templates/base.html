@@ -3,6 +3,7 @@
 
 <head>
   {% load static %}
+  {% load menu_tags %}
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,28 +32,7 @@
 
       {% block topmenu %}
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-{% load wagtailcore_tags %}
-              <a class="nav-link active" href="{% slugurl 'blog' %}">Blog</a>
-            </li>
-            {% load flatpages %}
-            <!-- services flatpages -->
-            {% get_flatpages '/services/' as services %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Services
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% for page in services %}
-                <li><a class="dropdown-item" href="{{ page.url }}">{{ page.title }}</a></li>
-              {% endfor %}
-              </ul>
-            </li>
-          </ul>
+          {% main_menu %}
           <div class="d-flex nav-item">
             {% if user.is_authenticated %}
               <a class="nav-link active" href="{% url 'logout' %}">Log Out</a>
@@ -109,8 +89,7 @@
           <p>Terra Venusta is a woman-owned landscaping and permaculture design group</p>
           <p>&copy; 2022 Terra Venusta</p>
         </div>
-        {% load menu_tags %}
-        {% main_menu max_levels=2 %}
+        {% flat_menu handle="footer" show_menu_heading=True %}
       </div>
     </div>
     {% endblock %}

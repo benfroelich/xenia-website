@@ -13,8 +13,10 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtailmenus.models import MenuPage
 
-class HomePage(Page):
+
+class HomePage(MenuPage):
     # database fields
     hero = models.CharField(max_length=300,
             help_text='Enter the headline for the entire project. This will be the first thing new users see.',)

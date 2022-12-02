@@ -15,9 +15,10 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from wagtailmenus.models import MenuPage
 
 
-class BlogPost(Page):
+class BlogPost(MenuPage):
     # Database fields
     intro = models.CharField(max_length=1000)
     feed_image = models.ForeignKey(
@@ -88,7 +89,7 @@ class BlogPost(Page):
             else: 
                 raise NotImplementedError(f'{comp} not implemented')
 
-class BlogIndex(Page):
+class BlogIndex(MenuPage):
     introduction = models.TextField(
         help_text='Text to describe the page',
         blank=True)

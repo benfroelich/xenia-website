@@ -1,9 +1,21 @@
 {% load menu_tags %}
-{% for item in menu_items %} 
-  <div class="col-md-2">
-    <h4><a href="{{ item.href }}">{{ item.text }}</a></h4>
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  {% for item in menu_items %} 
     {% if item.has_children_in_menu %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="{{item.href}}" 
+          role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{item.text}}
+        </a>
         {% sub_menu item %}
+      </li>
+    {% else %}
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" 
+          href="{{ item.href }}">
+          {{ item.text }}
+        </a>
+      </li>
     {% endif %}
-  </div>
-{% endfor %}
+  {% endfor %}
+</ul>
