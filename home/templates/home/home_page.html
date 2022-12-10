@@ -10,7 +10,7 @@
   <div class="row">
   {% image page.hero_background original class="squish-image" %}
     <div class="col-md-8 offset-md-2">
-      <p>{{ page.body }}</p>
+      {{ page.body }}
     </div>
   </div>
 </div>
@@ -20,10 +20,6 @@
     <div class="col-md-8 offset-md-2">
       <h3>Get started</h3>
       <a href="{% slugurl 'blog' %}" class="btn btn-primary">Blog</a>
-    </div>
-  </div>
-</div>
-
     </div>
   </div>
 </div>

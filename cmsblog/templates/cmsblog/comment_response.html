@@ -81,11 +81,7 @@
         <label for="{{ form_id }}_text" class="form-label">Your comment</label>
         <textarea id="{{ form_id }}_text" class="form-control"
               name="comment" required minlength="4" 
-              maxlength=1000 rows=3>
-              {% if comment is not None %}
-                {{ comment.get_text }}
-              {% endif %}
-              </textarea>
+              maxlength=1000 rows=3>{% if comment is not None %}{{ comment.get_text }}{% endif %}</textarea>
       </div>
       <button type="submit" class="centered-button btn btn-primary">Submit</button>
       {% if comment %}
