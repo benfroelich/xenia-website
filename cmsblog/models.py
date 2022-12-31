@@ -19,6 +19,8 @@ from wagtailmenus.models import MenuPage
 
 
 class BlogPost(MenuPage):
+    # TODO: revert when wagtailmenus is fixed
+    settings_panels = Page.settings_panels + MenuPage.settings_panels
     # Database fields
     intro = models.CharField(max_length=1000)
     feed_image = models.ForeignKey(
