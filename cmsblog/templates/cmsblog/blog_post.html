@@ -33,12 +33,15 @@
         </div>
       </div>
     {% for block in page.body %}
-        <section class="block-{{ block.block_type }}">
+        <div class="block-{{ block.block_type }}">
           {% if block.block_type == 'image' %}
             {% image block.value max-1000x500 class="post-content-image" %}
+          {% elif block.block_type == 'heading'  %}
+            <h2>{% include_block block %}</h2>
           {% else %}
             {% include_block block %}
-        {% endif %}
+          {% endif %}
+        </div>
     {% endfor %}
 
 {% else %}
