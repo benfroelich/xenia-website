@@ -43,6 +43,14 @@
           {% endif %}
         </div>
     {% endfor %}
+    {% if page.related_links.all %}
+      <div class="container border-top py-3">
+        <h2>Related Content</h2>
+        {% for l in page.related_links.all %}
+          <a href="{{ l.url }}">{{ l.name }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
 
 {% else %}
       <p>No page dag yo</p>
