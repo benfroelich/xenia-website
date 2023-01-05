@@ -32,6 +32,7 @@
             {{ page.owner.last_name }}
         </div>
       </div>
+      <p class="lead">{{ page.intro }}</p>
     {% for block in page.body %}
         <div class="block-{{ block.block_type }}">
           {% if block.block_type == 'image' %}
@@ -43,6 +44,16 @@
           {% endif %}
         </div>
     {% endfor %}
+    {% if page.related_links.all %}
+      <div class="container border-top py-3">
+        <h2>Related Content</h2>
+        <div class="list-group">
+          {% for l in page.related_links.all %}
+            <a class="list-group-item list-group-item-action" href="{{ l.url }}">{{ l.name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
 
 {% else %}
       <p>No page dag yo</p>

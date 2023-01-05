@@ -13,7 +13,7 @@ from wagtail.core.models import Site, Page
 
 from htmlvalidator.client import ValidatingClient
 
-from .models import BlogPost, Comment, Thread, BlogIndex
+from .models import BlogPost, Comment, Thread, BlogIndex, BlogPageRelatedLink
 
 # remember to prefix any test functions with "test_"
 
@@ -41,6 +41,23 @@ class BlogPostModelTests(WagtailPageTests):
         (uname, pw, post) = create_post(days_offset=-1)
         # first/last updated are equal
         self.assertEquals(post.should_display_updated(), False)
+
+    def test_relate_links_empty(self):
+        (uname, pw, post) = create_post()
+        resp = self.client.get(post.get_url())
+        self.assertNotContains(resp, 'Related Content')
+
+    def test_relate_links(self):
+        (uname, pw, post) = create_post()
+        link = BlogPageRelatedLink(page=post, name='first link', url='www.example.com')
+        link.save()
+        post.related_links.add(link)
+        resp = self.client.get(post.get_url())
+        # I'm thinking this should not be here, better to decouple 
+        # separation of front-end and back-end testing
+        self.assertContains(resp, 'Related Content')
+        self.assertContains(resp, 'first link')
+        self.assertContains(resp, 'www.example.com')
 
 class CommentModelTests(TestCase):
     def test_creation(self):
