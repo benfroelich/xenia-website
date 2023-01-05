@@ -32,6 +32,7 @@
             {{ page.owner.last_name }}
         </div>
       </div>
+      <p class="lead">{{ page.intro }}</p>
     {% for block in page.body %}
         <div class="block-{{ block.block_type }}">
           {% if block.block_type == 'image' %}
