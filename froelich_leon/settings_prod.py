@@ -16,7 +16,7 @@ IS_HEROKU = "DYNO" in os.environ
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['terravenustalandscapes.com']
+ALLOWED_HOSTS = ['terravenustalandscapes.com', 'plentifulgardens.com']
 if IS_HEROKU:
     ALLOWED_HOSTS += '*'
 
