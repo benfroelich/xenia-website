@@ -2,13 +2,13 @@
 @import "../../static/node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$brand-primary:     #2e4b52; 
-$brand-secondary:   #A0BCC2;
-$brand-tertiary:    #F9EBC8;
-$brand-quaternary:  #cae0b4;
+$brand-primary:     #189AB4; 
+$brand-secondary:   #05445E;
+$brand-tertiary:    #75E6DA;
+$brand-quaternary:  #D4F1F4;
 $hero-color-1:      $brand-primary;
-$hero-color-2:      #819ba1;
-$brand-font:        'Jura', sans-serif;
+$hero-color-2:      $brand-secondary;
+$brand-font:        'Open Sans', sans-serif;
 $font-weight-normal: 500;
 
 $btn-border-radius:           20px;
@@ -99,11 +99,11 @@ body {
 }
 
 #top-menu {
-  background: linear-gradient(90deg, $brand-secondary 0%, $brand-tertiary 100%) !important;
+  background: linear-gradient(20deg, $brand-primary 80%, $brand-secondary 100%) !important;
 }
 
 #footer {
-  background: linear-gradient(90deg, $brand-secondary 0%, $brand-tertiary 100%);
+  background: linear-gradient(20deg, $brand-primary 80%, $brand-secondary 100%);
 }
 
 ul.no-bullets {
