@@ -10970,6 +10970,10 @@ div.iconized {
   height: auto;
 }
 
+.block-image {
+  text-align: center;
+}
+
 div.hero {
   background: linear-gradient(90deg, #189AB4 0%, #05445E 50%) !important;
   border-radius: 0.5rem;

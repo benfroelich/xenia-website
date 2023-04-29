@@ -9,8 +9,18 @@
   </div>
   <div class="row">
   {% image page.hero_background original class="squish-image" %}
-    <div class="col-md-8 offset-md-2">
-      {{ page.body }}
+    <div class="col-md-8 offset-md-2 py-2">
+    {% for block in page.body %}
+        <div class="block-{{ block.block_type }}">
+          {% if block.block_type == 'image' %}
+            {% image block.value max-1000x500 class="post-content-image" %}
+          {% elif block.block_type == 'heading'  %}
+            <h2>{% include_block block %}</h2>
+          {% else %}
+            {% include_block block %}
+          {% endif %}
+        </div>
+    {% endfor %}
     </div>
   </div>
 </div>
