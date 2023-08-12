@@ -165,5 +165,10 @@ class CommentFlaggingTests(TestCase):
             {'comment_id': c.pk, 'post_id': c.thread.post.pk})
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn(c.owner.username, mail.outbox[0].body)
+        # crudely test that each entry in the recipients list in 
+        # an email addr
+        for recipient in mail.outbox[0].to:
+            self.assertEqual(type(recipient), str)
+            self.assertIn('@', recipient)
         self.assertIn(resp.wsgi_request.user.username, mail.outbox[0].body)
     

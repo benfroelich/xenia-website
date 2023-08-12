@@ -74,10 +74,12 @@ def comment(request, thread_id, post_id):
     return HttpResponseRedirect(page.get_url())
 
 def notify_admins(comment, request):
+    emails=[name for (name, email) in settings.ADMINS]
+
     send_mail(
             subject=f'[{get_current_site(request).name}] - Comment Flagged',
             message=f'{request.user} flagged the following comment by {comment.owner} \'{comment.comment_text}\'',
-            recipient_list=settings.ADMINS,
+            recipient_list=emails,
             from_email=None
         )
 
