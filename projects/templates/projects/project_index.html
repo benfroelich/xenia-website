@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load humanize %}
+
+{#{% block body_class %}template-projectindexpage{% endblock %}#}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+
+    <div class="row p-md-2">
+      <div class="col intro">{{ page.introduction|richtext }}</div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% if not active_posts %}
+      <h1>Nothing is posted</h1>
+      {% else %}
+        {% for post in active_posts %}
+          <div class="col">
+            <div class="card text-center blog-post-card">
+              {% image post.feed_image max-600x600 class="card-img-top" %}
+              <div class="card-body">
+                <h4 class="card-title">{{ post.title }}</h4>
+                <p class="card-text">{{ post.intro }}</p>
+                <a href="{% pageurl post %}" class="btn btn-primary">
+                  View Project
+                </a>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">{{ post.last_published_at|naturaltime }}</small>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+{% endblock %}

@@ -4,8 +4,6 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 import datetime
 
-from profanity_check import predict, predict_prob
-
 # wagtail-related
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
@@ -17,8 +15,7 @@ from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmenus.models import MenuPage
 
-
-class BlogPost(MenuPage):
+class ProjectPost(MenuPage):
     # Database fields
     intro = models.CharField(max_length=1000)
     feed_image = models.ForeignKey(
@@ -44,8 +41,8 @@ class BlogPost(MenuPage):
     # Editor panels configuration
     content_panels = [
         FieldPanel('intro'),
+        InlinePanel('stats', label="Project Stats"),
         FieldPanel('body'),
-        InlinePanel('related_links', label="Related links"),
     ] + Page.content_panels
 
     promote_panels = [
@@ -54,7 +51,7 @@ class BlogPost(MenuPage):
     ]
 
     # Parent page / subpage type rules
-    parent_page_types = ['cmsblog.BlogIndex']
+    parent_page_types = ['projects.ProjectIndex']
     subpage_types = []
 
     def __str__(self):
@@ -63,6 +60,7 @@ class BlogPost(MenuPage):
     def short_description(self):
         return self.body[0][:30]
 
+    # TODO: make this a class that is inherited here and in cmsblog
     # recently posted or updated
     @admin.display(boolean=True, ordering='last_published_at', description='recent post',)
     def is_recent(self):
@@ -89,7 +87,7 @@ class BlogPost(MenuPage):
             else: 
                 raise NotImplementedError(f'{comp} not implemented')
 
-class BlogIndex(MenuPage):
+class ProjectIndex(MenuPage):
     introduction = models.TextField(
         help_text='Text to describe the page',
         blank=True)
@@ -107,8 +105,8 @@ class BlogIndex(MenuPage):
         + Page.content_panels \
         + [ FieldPanel('image'), ]
     
-    # Speficies that only BlogPage objects can live under this index page
-    subpage_types = ['BlogPost']
+    # Speficies that only ProjectPage objects can live under this index page
+    subpage_types = ['ProjectPost']
 
     def children(self):
         return self.get_children().specific().live()
@@ -117,9 +115,9 @@ class BlogIndex(MenuPage):
     # by the date that they were published
     # https://docs.wagtail.org/en/stable/getting_started/tutorial.html#overriding-context
     def get_context(self, request):
-        context = super(BlogIndex, self).get_context(request)
+        context = super(ProjectIndex, self).get_context(request)
         # iterate over this in template 
-        context['active_posts'] = BlogPost.objects.descendant_of(
+        context['active_posts'] = ProjectPost.objects.descendant_of(
             self).live().order_by(
             '-first_published_at')
         return context
@@ -128,92 +126,31 @@ class BlogIndex(MenuPage):
         # Needed for previews to work
         return self.serve(request)
 
-    # Returns the child BlogPage objects for this BlogPageIndex.
+    # Returns the child ProjectPage objects for this ProjectPageIndex.
     # If a tag is used then it will filter the posts by tag.
     def get_posts(self):
-        return BlogPage.objects.live().descendant_of(self)
+        return ProjectPost.objects.live().descendant_of(self)
 
-# a group of comments will be listed in a thread
-class Thread(models.Model):
-    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
-    def all_deleted(self):
-        return not len(self.comment_set.filter(deleted=False)) > 0
-
+from taggit.models import TaggedItemBase
+class StatCategory(models.Model):
+    name = models.CharField(max_length=256)
+    units = models.CharField(max_length=64, blank=True)
     def __str__(self):
-        return f'Comment Thread on {self.post.__str__()}'
+        return f'{self.name} [{self.units}]'
 
-    # ordered by creation date, newest thread first
-    class Meta:
-        ordering = ['-pk']
+class Stats(Orderable):
+    post = ParentalKey(ProjectPost, on_delete=models.CASCADE, related_name="stats")
 
-    @property
-    def chain_id(self):
-        return f'thread_{self.pk}_post_{self.post.pk}'
-
-class Comment(models.Model):
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE, default=0)
-    comment_text = models.TextField(max_length=10000)
-
-    first_published_at = models.DateTimeField('date published', auto_now_add=True)
-    last_published_at = models.DateTimeField('date last modified', auto_now=True)
-    owner = models.ForeignKey(User, on_delete=models.PROTECT)
-    # this will get incremented every time save is executed, so the true
-    # default is 1
-    edits = models.PositiveIntegerField('number of edits', default=0)
-
-    # we don't actually delete the comment, but rather flag it as 
-    # deleted and fill some generic text in the views
-    deleted = models.BooleanField(default=False)
-
-    # every time a comment gets flagged, this should be incremented
-    flagged_count = models.PositiveIntegerField(
-            'number of times this comment has been flagged', 
-            default=0)
-
-    def __str__(self):
-        return f'"{self.short_description}" - on thread {self.thread.__str__()}'
-    @property
-    def short_description(self):
-        return self.comment_text[:30]
-
-    def edited(self):
-        return self.edits > 1
-
-    def save(self, *args, **kwargs):
-        if predict([self.comment_text]):
-            raise self.ProfanityError()
-        else:
-            self.edits += 1
-            self.comment_text = self.comment_text
-        super().save(*args, **kwargs)
-
-    @property
-    def get_text(self):
-        return "This comment has been deleted" if self.deleted else self.comment_text
-
-    @property
-    def text_target(self):
-        return f'comment_text_target{self.pk}'
-
-    @property
-    def form_target(self):
-        return f'comment_form_target{self.pk}'
-
-    # within a thread, comments are ordered oldest to newest
-    # so that it reads like a normal conversation
-    class Meta:
-        ordering = ['first_published_at']
-
-    class ProfanityError(Exception):
-        pass
-
-class BlogPageRelatedLink(Orderable):
-    page = ParentalKey(BlogPost, on_delete=models.CASCADE, related_name='related_links')
-    name = models.CharField(max_length=255)
-    url = models.URLField()
+    category = models.ForeignKey("StatCategory", on_delete=models.CASCADE, related_name="category")
+    value = models.DecimalField(max_digits=15, decimal_places=6)
+    details = models.CharField(max_length=1024, blank=True)
 
     panels = [
-        FieldPanel('name'),
-        FieldPanel('url'),
+        FieldPanel('category'),
+        FieldPanel('value'),
+        FieldPanel('details'),
     ]
+
+    def __str__(self):
+        return f'{name}: {value}'
 

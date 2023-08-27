@@ -30,6 +30,7 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = '/profile/'
 
 INSTALLED_APPS = [
+    'projects.apps.ProjectsConfig',
     'cmsblog.apps.CmsblogConfig',
     'home.apps.HomeConfig',
     'registration.apps.RegistrationConfig',
