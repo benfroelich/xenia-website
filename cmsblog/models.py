@@ -16,9 +16,17 @@ from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtailmenus.models import MenuPage
+from wagtailmenus.panels import menupage_settings_panels
 
+def printy(item):
+    print(item)
+    return item
 
 class BlogPost(MenuPage):
+    # TODO: revert once wagtailmenus gets updated
+    #settings_panels = menupage_settings_panels
+    settings_panels = Page.settings_panels + MenuPage.settings_panels
+
     # Database fields
     intro = models.CharField(max_length=1000)
     feed_image = models.ForeignKey(
@@ -90,6 +98,9 @@ class BlogPost(MenuPage):
                 raise NotImplementedError(f'{comp} not implemented')
 
 class BlogIndex(MenuPage):
+    # TODO: revert once wagtailmenus gets updated
+    #settings_panels = menupage_settings_panels
+    settings_panels = Page.settings_panels + MenuPage.settings_panels
     introduction = models.TextField(
         help_text='Text to describe the page',
         blank=True)
