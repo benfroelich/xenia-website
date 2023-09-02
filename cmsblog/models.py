@@ -54,6 +54,7 @@ class BlogPost(MenuPage):
         FieldPanel('intro'),
         FieldPanel('body'),
         InlinePanel('related_links', label="Related links"),
+        FieldPanel('owner'),
     ] + Page.content_panels
 
     promote_panels = [

@@ -48,6 +48,7 @@ class ProjectPost(MenuPage):
         FieldPanel('intro'),
         InlinePanel('stats', label="Project Stats"),
         FieldPanel('body'),
+        FieldPanel('owner'),
     ] + Page.content_panels
 
     promote_panels = [
