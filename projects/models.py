@@ -16,6 +16,10 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtailmenus.models import MenuPage
 from wagtailmenus.panels import menupage_settings_panels
 
+class GalleryBlock(blocks.StructBlock):
+    caption = blocks.CharBlock()
+    img = ImageChooserBlock()
+
 class ProjectPost(MenuPage):
     # TODO: revert once wagtailmenus gets updated
     #settings_panels = menupage_settings_panels
@@ -30,7 +34,18 @@ class ProjectPost(MenuPage):
         on_delete=models.SET_NULL,
         related_name='+'
     )
+    intro_img = StreamField([
+        ('gallery', blocks.ListBlock(GalleryBlock())),
+    ], null=True, use_json_field=True)
     body = StreamField([
+        #('gallery', blocks.ListBlock(GalleryBlock)),
+        #('gallery', blocks.ListBlock(blocks.StructBlock([
+        #    ('img', blocks.CharBlock()),
+        #    ('caption', blocks.CharBlock()),
+        #]))),
+        # OK: ('gallery', blocks.ListBlock(blocks.CharBlock())),
+        # F:  ('gallery', blocks.ListBlock(blocks.StructBlock([('a', blocks.CharBlock())]))),
+        # OK: ('gallery', blocks.ListBlock(blocks.StructBlock())),
         ('heading', blocks.CharBlock(form_classname="full title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
@@ -40,12 +55,14 @@ class ProjectPost(MenuPage):
     search_fields = Page.search_fields + [
         index.SearchField('title'),
         index.SearchField('intro'),
+        index.SearchField('intro_img'),
         index.SearchField('body'),
     ]
 
     # Editor panels configuration
     content_panels = [
         FieldPanel('intro'),
+        FieldPanel('intro_img'),
         InlinePanel('stats', label="Project Stats"),
         FieldPanel('body'),
         FieldPanel('owner'),

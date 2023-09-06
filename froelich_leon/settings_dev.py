@@ -42,18 +42,19 @@ else:
 
 # force missing variables to throw exceptions during development
 # https://adamj.eu/tech/2022/03/30/how-to-make-django-error-for-undefined-template-variables/#with-a-logging-filter-that-raises-exceptions
+# disabled due to django-crispy-forms testing for variables with if blocks
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "mising_variable_error": {
-            "()": "froelich_leon.logging.MissingVariableErrorFilter",
-        },
+        #"mising_variable_error": {
+        #    "()": "froelich_leon.logging.MissingVariableErrorFilter",
+        #},
     },
     "loggers": {
-        "django.template": {
-            "level": "DEBUG",
-            "filters": ["mising_variable_error"],
-        },
+        #"django.template": {
+        #    "level": "DEBUG",
+        #    "filters": ["mising_variable_error"],
+        #},
     },
 }

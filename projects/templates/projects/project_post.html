@@ -32,6 +32,20 @@
             {{ page.owner.last_name }}
         </div>
       </div>
+      {% for block in page.intro_img %}
+        {% if block.block_type == 'gallery' %}
+          <div class="container text-center">
+            <div class="row">
+              {% for entry in block.value %}
+                <div class="col">
+                  <h4>{{ entry.caption }}</h4>
+                  {% image entry.img max-400x300 class="post-content-image" %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
       <p class="lead">{{ page.intro }}</p>
       {% if page.stats.all %}
         <h2>Project Statistics</h2>
@@ -60,7 +74,7 @@
         <div class="block-{{ block.block_type }}">
           {% if block.block_type == 'image' %}
             {% image block.value max-1000x500 class="post-content-image" %}
-          {% elif block.block_type == 'heading'  %}
+          {% elif block.block_type == 'heading' %}
             <h2>{% include_block block %}</h2>
           {% else %}
             {% include_block block %}
