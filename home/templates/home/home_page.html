@@ -29,7 +29,8 @@
   <div class="row">
     <div class="col-md-8 offset-md-2">
       <h3>Get started</h3>
-      <a href="{% slugurl 'blog' %}" class="btn btn-primary">Blog</a>
+      {% load menu_tags %}
+      {% flat_menu 'inline' max_levels=1 show_menu_heading=False %}
     </div>
   </div>
 </div>
